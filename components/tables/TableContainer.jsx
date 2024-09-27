@@ -17,7 +17,8 @@ export const TableContainer = async ({ country }) => {
       },
     },
   });
-  const products = ([] || data).map((product) => {
+
+  const products = (data.length === 0 ? [] : data).map((product) => {
     const { id, sku, ean, names, prices, brand } = product;
     return {
       id: id.toString(),
