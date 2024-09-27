@@ -37,3 +37,5 @@ next-env.d.ts
 /public/temp/data/*.json
 /public/temp/*.xml
 /services/feed/*.txt
+
+.env
