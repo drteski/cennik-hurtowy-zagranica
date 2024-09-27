@@ -18,19 +18,20 @@ export const TableContainer = async ({ country }) => {
     },
   });
 
-  const products = (data.length === 0 ? [] : data).map((product) => {
+  const products = data.map((product) => {
     const { id, sku, ean, names, prices, brand } = product;
     return {
       id: id.toString(),
       sku,
       ean,
-      name: names[0].name,
+      name: names.length === 0 ? "" : names[0].name,
       brand,
       price: {
-        currency: prices[0].currency,
-        oldPrice: prices[0].oldPrice,
-        newPrice: prices[0].newPrice,
-        difference: prices[0].oldPrice - prices[0].newPrice,
+        currency: prices.length === 0 ? "" : prices[0].currency,
+        oldPrice: prices.length === 0 ? 0 : prices[0].oldPrice,
+        newPrice: prices.length === 0 ? 0 : prices[0].newPrice,
+        difference:
+          prices.length === 0 ? 0 : prices[0].oldPrice - prices[0].newPrice,
       },
     };
   });
