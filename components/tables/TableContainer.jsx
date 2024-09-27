@@ -17,7 +17,7 @@ export const TableContainer = async ({ country }) => {
       },
     },
   });
-  const products = data.map((product) => {
+  const products = ([] || data).map((product) => {
     const { id, sku, ean, names, prices, brand } = product;
     return {
       id: id.toString(),
@@ -51,13 +51,26 @@ export const TableContainer = async ({ country }) => {
       priceDown: 0,
     },
   );
+
+  const productProps = [
+    ...productsWithDifferences,
+    ...productsWithoutDifferences,
+  ];
   return (
     <div className="px-4 h-[calc(100dvh_-_120px)] overflow-clip">
-      <DataTable
-        products={[...productsWithDifferences, ...productsWithoutDifferences]}
-        priceChanges={priceChanges}
-        country={country}
-      />
+      {productProps.length === 0 ? (
+        <div className="h-full flex items-center justify-center">
+          <span className="block text-2xl uppercase font-medium">
+            No product data
+          </span>
+        </div>
+      ) : (
+        <DataTable
+          products={productProps}
+          priceChanges={priceChanges}
+          country={country}
+        />
+      )}
     </div>
   );
 };

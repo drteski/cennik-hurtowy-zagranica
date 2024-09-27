@@ -10,8 +10,9 @@ import {
 } from "@/lib/processJson";
 
 const dataPath = `${process.cwd().replace(/\\\\/g, "/")}/public/temp/data/`;
-const processProducts = async (data) => {
-  const products = data
+
+const convertProducts = (data) => {
+  return data
     .map((product) => {
       const productVariant =
         product.variants.variant.length >= 0
@@ -32,28 +33,111 @@ const processProducts = async (data) => {
     })
     .flatMap((product) => product)
     .filter(Boolean);
+};
+const processProducts = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    await Promise.all(
+      data.map(async (product) => {
+        const { variantId, sku, ean, brand, titles, prices } = product;
+        return prisma.product.upsert({
+          where: {
+            id: variantId,
+          },
+          update: {
+            id: variantId,
+            sku,
+            ean,
+            brand,
+          },
+          create: {
+            id: variantId,
+            sku,
+            ean,
+            brand,
+          },
+        });
+      }),
+    );
+    resolve();
+  });
+};
 
-  return products.map(async (product) => {
-    const { variantId, sku, ean, brand, titles, prices } = product;
-    await prisma.product.upsert({
-      where: {
-        id: variantId,
-      },
-      update: {
-        id: variantId,
-        sku,
-        ean,
-        brand,
-      },
-      create: {
-        id: variantId,
-        sku,
-        ean,
-        brand,
-      },
+const processPrices = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    const pricesToSave = [];
+    data.forEach((product) => {
+      const { variantId, prices } = product;
+      pricesToSave.push(
+        ...prices.map((price) => ({
+          variantId,
+          lang: price.lang,
+          currency: price.currency,
+          price: price.price,
+        })),
+      );
     });
     await Promise.all(
-      titles.map(async (title) => {
+      pricesToSave.map(async (prices) => {
+        const { variantId, lang, currency, price } = prices;
+        const existingPrice = await prisma.productPrice.findFirst({
+          where: {
+            lang: lang,
+            productId: variantId,
+          },
+        });
+        if (existingPrice) {
+          return prisma.productPrice.update({
+            where: {
+              id: existingPrice.id,
+            },
+            data: {
+              lang: lang,
+              currency: currency,
+              oldPrice: existingPrice.newPrice,
+              newPrice: price,
+              product: {
+                connect: {
+                  id: variantId,
+                },
+              },
+            },
+          });
+        } else {
+          return prisma.productPrice.create({
+            data: {
+              lang: lang,
+              currency: currency,
+              oldPrice: price,
+              newPrice: price,
+              product: {
+                connect: {
+                  id: variantId,
+                },
+              },
+            },
+          });
+        }
+      }),
+    );
+    resolve();
+  });
+};
+const processTitles = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    const titlesToSave = [];
+    data.forEach((product) => {
+      const { variantId, titles } = product;
+      titlesToSave.push(
+        ...titles.map((title) => ({
+          variantId,
+          lang: title.lang,
+          name: title.name,
+        })),
+      );
+    });
+    await Promise.all(
+      titlesToSave.map(async (title) => {
+        const { variantId, lang, name } = title;
         const existingTitle = await prisma.productName.findFirst({
           where: {
             lang: title.lang,
@@ -66,8 +150,8 @@ const processProducts = async (data) => {
               id: existingTitle.id,
             },
             data: {
-              lang: title.lang,
-              name: title.value,
+              lang,
+              name,
               product: {
                 connect: {
                   id: variantId,
@@ -78,8 +162,8 @@ const processProducts = async (data) => {
         } else {
           return prisma.productName.create({
             data: {
-              lang: title.lang,
-              name: title.value,
+              lang,
+              name,
               product: {
                 connect: {
                   id: variantId,
@@ -90,48 +174,7 @@ const processProducts = async (data) => {
         }
       }),
     );
-    await Promise.all(
-      prices.map(async (price) => {
-        const existingPrice = await prisma.productPrice.findFirst({
-          where: {
-            lang: price.lang,
-            productId: variantId,
-          },
-        });
-        if (existingPrice) {
-          return prisma.productPrice.update({
-            where: {
-              id: existingPrice.id,
-            },
-            data: {
-              lang: price.lang,
-              currency: price.currency,
-              oldPrice: existingPrice.newPrice,
-              newPrice: price.price,
-              product: {
-                connect: {
-                  id: variantId,
-                },
-              },
-            },
-          });
-        } else {
-          return prisma.productPrice.create({
-            data: {
-              lang: price.lang,
-              currency: price.currency,
-              oldPrice: price.price,
-              newPrice: price.price,
-              product: {
-                connect: {
-                  id: variantId,
-                },
-              },
-            },
-          });
-        }
-      }),
-    );
+    resolve();
   });
 };
 
@@ -139,18 +182,14 @@ export async function GET() {
   const files = fs.readdirSync(dataPath);
   const productsFiles = files.filter((file) => file.match(/product-\d*/g));
 
-  await Promise.all(
-    productsFiles.map(async (file) => await processFile(file, processProducts)),
-  );
-
-  // await prisma.product.deleteMany({});
-  // await prisma.productName.deleteMany({});
-  // await prisma.productPrice.deleteMany({});
-  // const filesToDelete = files.map(
-  //   async (file) =>
-  //     await fs.unlink(`${dataPath}${file}`, (err) => console.log(err)),
-  // );
-  // await Promise.all(filesToDelete);
+  for await (const file of productsFiles) {
+    const products = await processFile(file).then((data) =>
+      convertProducts(data),
+    );
+    await processProducts(products);
+    await processPrices(products);
+    await processTitles(products);
+  }
 
   return NextResponse.json({ message: "Zaktualizowano produkty." });
 }
