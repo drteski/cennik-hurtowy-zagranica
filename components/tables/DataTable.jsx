@@ -49,7 +49,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
       });
     }
     return setProductsData(products);
-  }, [showChanges]);
+  }, [showChanges, products]);
 
   const table = useReactTable({
     data: productsData,
