@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import axios from "axios";
@@ -13,7 +12,6 @@ export const ExcludedProducts = ({ data }) => {
   const namesRef = useRef(null);
   const [tooltip, setTooltip] = useState("");
 
-  console.log(data);
   const handleExclude = async (e) => {
     e.preventDefault();
 
@@ -23,7 +21,8 @@ export const ExcludedProducts = ({ data }) => {
           .replace(", ", ",")
           .replace(" , ", ",")
           .replace(" ,", ",")
-          .split(","),
+          .split(",")
+          .map((ids) => parseInt(ids)),
         eans: eansRef.current.value
           .replace(", ", ",")
           .replace(" , ", ",")

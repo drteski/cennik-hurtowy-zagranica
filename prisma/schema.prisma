@@ -65,7 +65,7 @@ model Settings {
 
 model ExcludeProducts {
   id         Int      @id @default(autoincrement())
-  variantIds String[]
+  variantIds Int[]
   skus       String[]
   eans       String[]
   names      String[]
