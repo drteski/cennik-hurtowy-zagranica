@@ -1,6 +1,6 @@
 <?php
-$url = 'https://files.lazienka-rea.com.pl/feed_3.xml';
-# $url = 'https://lazienka-rea.com.pl/feed/generate/full_offer';
+# $url = 'https://files.lazienka-rea.com.pl/feed_3.xml';
+$url = 'https://lazienka-rea.com.pl/feed/generate/full_offer';
 $xmlDownloadLocation = '../../public/temp/';
 $jsonSaveLocation = '../../public/temp/data/';
 $productsPerFile = 500; // Updated batch size to 500
