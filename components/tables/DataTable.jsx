@@ -60,7 +60,6 @@ export const DataTable = ({ products, country, priceChanges }) => {
     },
   });
 
-  const headerWidthClasses = [10, 10, 10, 10, 50, 10];
   const textClasses = [
     "text-center text-[13px] truncate",
     "text-center text-[13px] truncate",
@@ -80,7 +79,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <TableHead
-                      className={`w-[${headerWidthClasses[index]}%] ${textClasses[index]} pt-2`}
+                      className={`table-header-${index + 1} ${textClasses[index]} pt-2`}
                       key={header.id}
                       colSpan={header.colSpan}
                     >
