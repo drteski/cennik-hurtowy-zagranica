@@ -122,7 +122,7 @@ export const useTableColumns = (country) => {
           </div>
         ),
         cell: (info) => {
-          const { newPrice, currency, difference } = info.getValue();
+          const { newPrice, difference } = info.getValue();
           const price = new Intl.NumberFormat(country.locale, {
             style: "currency",
             currency: country.currency,
@@ -137,7 +137,7 @@ export const useTableColumns = (country) => {
           }
           if (difference > 0) {
             return (
-              <span className="text-green-600 font-medium text-[16px] flex justify-end items-center gap-2">
+              <span className="price-down font-medium text-[16px] flex justify-end items-center gap-2">
                 {price}
                 <CarbonTriangleDownSolid className="h-3 w-3" />
               </span>
@@ -145,7 +145,7 @@ export const useTableColumns = (country) => {
           }
           if (difference < 0) {
             return (
-              <span className="text-red-600 font-medium text-[16px] flex justify-end items-center gap-2">
+              <span className="price-up font-medium text-[16px] flex justify-end items-center gap-2">
                 {price}
                 <CarbonTriangleSolid className="h-3 w-3" />
               </span>

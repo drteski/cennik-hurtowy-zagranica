@@ -127,7 +127,6 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
                   padding: "3px 6px",
                   color: "black",
                   textAlign: "left",
-                  // width: "40%",
                   textTransform: "uppercase",
                   fontSize: 12,
                 }}
@@ -155,8 +154,8 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
                     item.difference === 0
                       ? "black"
                       : item.difference < 0
-                        ? "red"
-                        : "green",
+                        ? "#da1e28"
+                        : "#24a148",
                   textAlign: "right",
                   fontWeight: 700,
                   width: 80,

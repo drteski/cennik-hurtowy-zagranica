@@ -22,13 +22,7 @@ export const convertProducts = (data) => {
       });
     })
     .flatMap((product) => product)
-    .filter(Boolean)
-    .filter((product) => {
-      const { titles } = product;
-      return !titles.some((title) =>
-        title.value.toLowerCase().includes("allegro"),
-      );
-    });
+    .filter(Boolean);
 };
 export const processProducts = async (data) => {
   return new Promise(async (resolve) => {

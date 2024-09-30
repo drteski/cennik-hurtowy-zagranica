@@ -1,6 +1,5 @@
-import { format } from "date-fns";
-
 export const dynamic = "force-dynamic";
+import { format } from "date-fns";
 import {
   convertProducts,
   processPrices,

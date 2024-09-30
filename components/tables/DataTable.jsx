@@ -15,7 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,10 +36,20 @@ import { useTableColumns } from "@/hooks/useTableColumns";
 import { Filter } from "@/components/tables/TableFilter";
 
 export const DataTable = ({ products, country, priceChanges }) => {
+  const [showChanges, setShowChanges] = useState(false);
   const [productsData, setProductsData] = useState(() => products);
   const [sorting, setSorting] = useState([]);
 
   const columns = useTableColumns(country);
+
+  useEffect(() => {
+    if (showChanges) {
+      return setProductsData((prevState) => {
+        return prevState.filter((product) => product.price.difference !== 0);
+      });
+    }
+    return setProductsData(products);
+  }, [showChanges]);
 
   const table = useReactTable({
     data: productsData,
@@ -125,10 +135,19 @@ export const DataTable = ({ products, country, priceChanges }) => {
           </TableBody>
         </Table>
       </div>
-      <div className="bg-gray-100 sticky bottom-0 p-2 rounded-b-md text-sm">
-        Total products <strong>{table.getRowCount()}</strong> — Products with
-        increased prices: <strong>{priceChanges.priceUp}</strong> — Products
-        with decreased prices: <strong>{priceChanges.priceDown}</strong>
+      <div className="bg-gray-100 sticky bottom-0 p-2 rounded-b-md flex items-center justify-between">
+        <div className="text-sm">
+          Total products <strong>{table.getRowCount()}</strong> — Products with
+          increased prices: <strong>{priceChanges.priceUp}</strong> — Products
+          with decreased prices: <strong>{priceChanges.priceDown}</strong>
+        </div>
+        <Button
+          className="py-0 h-5"
+          variant="link"
+          onClick={() => setShowChanges(!showChanges)}
+        >
+          {showChanges ? "Show all prices" : "Show price changes"}
+        </Button>
       </div>
       <div className="grid grid-cols-[150px_1fr_auto_auto] items-center gap-8 py-4">
         <span className="flex items-center  gap-1 w-[150px]">
@@ -147,7 +166,6 @@ export const DataTable = ({ products, country, priceChanges }) => {
               const currentPage = e.target.value
                 ? Number(e.target.value) - 1
                 : 0;
-              router.push(`${pathname}?page=${currentPage + 1}&limit=${limit}`);
               table.setPageIndex(currentPage);
             }}
             className="w-16"
@@ -157,7 +175,6 @@ export const DataTable = ({ products, country, priceChanges }) => {
           value={table.getState().pagination.pageSize}
           onValueChange={(e) => {
             table.setPageSize(Number(e));
-            router.push(`${pathname}?page=${page}&limit=${e}`);
           }}
         >
           <SelectTrigger className="w-[125px]">

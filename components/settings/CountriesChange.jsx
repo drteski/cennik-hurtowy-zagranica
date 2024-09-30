@@ -18,7 +18,7 @@ export const CountriesPasswordChange = ({ data }) => {
     });
   };
   return (
-    <div className="bg-gray-100 rounded-lg p-4 flex flex-col gap-8 row-span-4 relative">
+    <div className="bg-gray-100 rounded-lg p-4 flex flex-col gap-8 col-start-1 col-end-4 row-span-4 relative">
       <h2 className="text-2xl font-bold uppercase">Countries Passwords</h2>
       {tooltip !== "" && (
         <span className="absolute top-4 right-4 text-sm text-gray-500 py-4 block">

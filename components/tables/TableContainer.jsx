@@ -18,7 +18,7 @@ export const TableContainer = async ({ country }) => {
     },
   });
 
-  const products = data.map((product) => {
+  const totalProducts = data.map((product) => {
     const { id, sku, ean, names, prices, brand } = product;
     return {
       id: id.toString(),
@@ -35,6 +35,19 @@ export const TableContainer = async ({ country }) => {
       },
     };
   });
+
+  const filters = await prisma.excludeProducts.findFirst();
+
+  const products = totalProducts
+    .filter((product) => !filters.variantIds.some((ids) => ids === product.id))
+    .filter((product) => !filters.skus.some((sku) => sku === product.sku))
+    .filter((product) => !filters.eans.some((ean) => ean === product.ean))
+    .filter(
+      (product) =>
+        !filters.names.some((name) =>
+          product.name.toLowerCase().includes(name),
+        ),
+    );
 
   const productsWithDifferences = products.filter(
     (product) => product.price.difference !== 0,

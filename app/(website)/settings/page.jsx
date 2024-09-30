@@ -7,6 +7,7 @@ import { PasswordChange } from "@/components/settings/PasswordChange";
 import { CountriesPasswordChange } from "@/components/settings/CountriesChange";
 import { MailingList } from "@/components/settings/MailingList";
 import prisma from "@/db";
+import { ExcludedProducts } from "@/components/settings/ExludedProducts";
 
 const SettingsPage = async () => {
   const cookieStore = cookies();
@@ -28,6 +29,7 @@ const SettingsPage = async () => {
       country: true,
     },
   });
+  const excludedProducts = await prisma.excludeProducts.findFirst();
 
   return (
     <main className="p-10 grid grid-rows-[auto_auto] gap-10 h-screen min-w-[768px]">
@@ -38,10 +40,11 @@ const SettingsPage = async () => {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-2 grid-rows-5 gap-5 h-[calc(100dvh_-_120px_-_36px)]">
+      <div className="grid grid-cols-6 grid-rows-7 gap-5 h-[calc(100dvh_-_120px_-_36px)]">
         <CountriesPasswordChange data={countries} />
         <MailingList data={mailingList} />
         <PasswordChange />
+        <ExcludedProducts data={excludedProducts} />
       </div>
     </main>
   );

@@ -31,7 +31,7 @@ export const PasswordChange = () => {
   };
 
   return (
-    <div className="bg-gray-100 rounded-lg p-4 flex flex-col gap-8 col-start-1 col-end-3 row-start-5 relative row-end-6">
+    <div className="bg-gray-100 rounded-lg p-4 flex flex-col gap-8 row-start-5 relative row-end-8">
       <h2 className="text-2xl font-bold uppercase">Settings Password</h2>
       {tooltip !== "" && (
         <span className="absolute top-4 right-4 text-sm text-gray-500 py-4 block">
@@ -40,20 +40,19 @@ export const PasswordChange = () => {
       )}
       <div>
         <form onSubmit={handlePassword} className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            <Input
-              ref={passwordRef}
-              className="bg-white"
-              placeholder="Password"
-              type="password"
-            />
-            <Input
-              ref={repeatPasswordRef}
-              className="bg-white"
-              placeholder="Repeat Password"
-              type="password"
-            />
-          </div>
+          <Input
+            ref={passwordRef}
+            className="bg-white"
+            placeholder="Password"
+            type="password"
+          />
+          <Input
+            ref={repeatPasswordRef}
+            className="bg-white"
+            placeholder="Repeat Password"
+            type="password"
+          />
+
           <Button>Save</Button>
         </form>
       </div>

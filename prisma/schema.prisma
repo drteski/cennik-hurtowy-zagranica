@@ -62,3 +62,11 @@ model Settings {
   id       Int    @id @default(autoincrement())
   password String
 }
+
+model ExcludeProducts {
+  id         Int      @id @default(autoincrement())
+  variantIds String[]
+  skus       String[]
+  eans       String[]
+  names      String[]
+}

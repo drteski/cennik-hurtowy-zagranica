@@ -103,3 +103,11 @@ body {
 .table-header-6 {
     width: 150px;
 }
+
+.price-up {
+    color: #da1e28;
+}
+
+.price-down {
+    color: #24a148;
+}
