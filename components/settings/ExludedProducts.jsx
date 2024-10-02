@@ -4,6 +4,15 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const ExcludedProducts = ({ data }) => {
   const variantIdsRef = useRef(null);
@@ -14,30 +23,34 @@ export const ExcludedProducts = ({ data }) => {
 
   const handleExclude = async (e) => {
     e.preventDefault();
-
+    const variantIds = variantIdsRef.current.value
+      .replace(", ", ",")
+      .replace(" , ", ",")
+      .replace(" ,", ",")
+      .split(",")
+      .map((ids) => parseInt(ids));
+    const eans = eansRef.current.value
+      .replace(", ", ",")
+      .replace(" , ", ",")
+      .replace(" ,", ",")
+      .split(",");
+    const skus = skusRef.current.value
+      .replace(", ", ",")
+      .replace(" , ", ",")
+      .replace(" ,", ",")
+      .split(",");
+    const names = namesRef.current.value
+      .replace(", ", ",")
+      .replace(" , ", ",")
+      .replace(" ,", ",")
+      .split(",");
+    console.log(variantIds);
     await axios
       .post("/api/settings/exclude", {
-        variantIds: variantIdsRef.current.value
-          .replace(", ", ",")
-          .replace(" , ", ",")
-          .replace(" ,", ",")
-          .split(",")
-          .map((ids) => parseInt(ids)),
-        eans: eansRef.current.value
-          .replace(", ", ",")
-          .replace(" , ", ",")
-          .replace(" ,", ",")
-          .split(","),
-        skus: skusRef.current.value
-          .replace(", ", ",")
-          .replace(" , ", ",")
-          .replace(" ,", ",")
-          .split(","),
-        names: namesRef.current.value
-          .replace(", ", ",")
-          .replace(" , ", ",")
-          .replace(" ,", ",")
-          .split(","),
+        variantIds: isNaN(variantIds[0]) ? [] : variantIds,
+        eans,
+        skus,
+        names,
       })
       .then(() => {
         setTooltip("Saved");
@@ -46,13 +59,30 @@ export const ExcludedProducts = ({ data }) => {
   };
 
   return (
-    <div className="bg-gray-100 rounded-lg p-4 flex flex-col col-start-2 col-end-7 gap-8 row-start-5 relative row-end-8">
-      <h2 className="text-2xl font-bold uppercase">Exclude Products</h2>
-      {tooltip !== "" && (
-        <span className="absolute top-4 right-4 text-sm text-gray-500 py-4 block">
-          {tooltip}
-        </span>
-      )}
+    <div className="bg-gray-100 rounded-lg p-4 flex flex-col col-start-2 col-end-7 gap-8 row-start-5 row-end-8">
+      <div className="flex justify-between items-center relative">
+        <h2 className="text-2xl font-bold uppercase">Exclude Products</h2>
+        <Select>
+          <SelectTrigger className="w-[180px] bg-white">
+            <SelectValue placeholder="Select a fruit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Fruits</SelectLabel>
+              <SelectItem value="apple">Apple</SelectItem>
+              <SelectItem value="banana">Banana</SelectItem>
+              <SelectItem value="blueberry">Blueberry</SelectItem>
+              <SelectItem value="grapes">Grapes</SelectItem>
+              <SelectItem value="pineapple">Pineapple</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        {tooltip !== "" && (
+          <span className="absolute -top-1.5 right-[204px] text-sm text-gray-500 py-4 block">
+            {tooltip}
+          </span>
+        )}
+      </div>
       <div>
         <form onSubmit={handleExclude} className="flex flex-col gap-2">
           <div className="flex gap-2 justify-center">
@@ -64,7 +94,7 @@ export const ExcludedProducts = ({ data }) => {
                 placeholder="Variant IDs"
                 ref={variantIdsRef}
                 rows={14}
-                defaultValue={data.variantIds.join(", ")}
+                defaultValue={data?.variantIds.join(", ")}
               />
             </div>
             <div className="w-full">
@@ -75,7 +105,7 @@ export const ExcludedProducts = ({ data }) => {
                 placeholder="SKUs"
                 ref={skusRef}
                 rows={14}
-                defaultValue={data.skus.join(", ")}
+                defaultValue={data?.skus.join(", ")}
               />
             </div>
             <div className="w-full">
@@ -86,7 +116,7 @@ export const ExcludedProducts = ({ data }) => {
                 placeholder="EANs"
                 ref={eansRef}
                 rows={14}
-                defaultValue={data.eans.join(", ")}
+                defaultValue={data?.eans.join(", ")}
               />
             </div>
             <div className="w-full">
@@ -97,7 +127,7 @@ export const ExcludedProducts = ({ data }) => {
                 placeholder="Names"
                 ref={namesRef}
                 rows={14}
-                defaultValue={data.names.join(", ")}
+                defaultValue={data?.names.join(", ")}
               />
             </div>
           </div>

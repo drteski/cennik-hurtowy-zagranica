@@ -2,7 +2,7 @@ import { DataTable } from "@/components/tables/DataTable";
 import prisma from "@/db";
 
 export const TableContainer = async ({ country }) => {
-  const filters = await prisma.excludeProducts.findFirst();
+  // const filters = await prisma.excludeProducts.findFirst();
   const data = await prisma.product.findMany({
     where: {},
     include: {
@@ -19,38 +19,37 @@ export const TableContainer = async ({ country }) => {
     },
   });
 
-  const products = data
-    .map((product) => {
-      const { id, sku, ean, names, prices, brand } = product;
-      return {
-        id: id.toString(),
-        sku,
-        ean,
-        name: names.length === 0 ? "" : names[0].name,
-        brand,
-        price: {
-          currency: prices.length === 0 ? "" : prices[0].currency,
-          oldPrice: prices.length === 0 ? 0 : prices[0].oldPrice,
-          newPrice: prices.length === 0 ? 0 : prices[0].newPrice,
-          difference:
-            prices.length === 0 ? 0 : prices[0].oldPrice - prices[0].newPrice,
-        },
-      };
-    })
-    .filter(
-      (product) =>
-        !filters.names.some((name) =>
-          product.name.toLowerCase().includes(name.toLocaleString()),
-        ),
-    )
-    .filter(
-      (product) =>
-        !filters.skus.some(
-          (sku) => product.sku.toLowerCase() === sku.toLowerCase(),
-        ),
-    )
-    .filter((product) => !filters.eans.some((ean) => product.ean === ean))
-    .filter((product) => !filters.variantIds.some((vid) => product.id === vid));
+  const products = data.map((product) => {
+    const { id, sku, ean, names, prices, brand } = product;
+    return {
+      id: id.toString(),
+      sku,
+      ean,
+      name: names.length === 0 ? "" : names[0].name,
+      brand,
+      price: {
+        currency: prices.length === 0 ? "" : prices[0].currency,
+        oldPrice: prices.length === 0 ? 0 : prices[0].oldPrice,
+        newPrice: prices.length === 0 ? 0 : prices[0].newPrice,
+        difference:
+          prices.length === 0 ? 0 : prices[0].oldPrice - prices[0].newPrice,
+      },
+    };
+  });
+  // .filter(
+  //   (product) =>
+  //     !filters.names.some((name) =>
+  //       product.name.toLowerCase().includes(name.toLocaleString()),
+  //     ),
+  // )
+  // .filter(
+  //   (product) =>
+  //     !filters.skus.some(
+  //       (sku) => product.sku.toLowerCase() === sku.toLowerCase(),
+  //     ),
+  // )
+  // .filter((product) => !filters.eans.some((ean) => product.ean === ean))
+  // .filter((product) => !filters.variantIds.some((vid) => product.id === vid));
 
   const productsWithDifferences = products.filter(
     (product) => product.price.difference !== 0,

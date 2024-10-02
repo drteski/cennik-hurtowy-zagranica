@@ -1,9 +1,9 @@
 <?php
-$url = 'https://files.lazienka-rea.com.pl/feed_3.xml';
-# $url = 'https://lazienka-rea.com.pl/feed/generate/full_offer';
+# $url = 'https://files.lazienka-rea.com.pl/feed_3.xml';
+$url = 'https://lazienka-rea.com.pl/feed/generate/full_offer';
 $xmlDownloadLocation = '../../public/temp/';
 $jsonSaveLocation = '../../public/temp/data/';
-$productsPerFile = 500; // Updated batch size to 500
+$productsPerFile = 1000;
 
 function xmlToArray($xml, $options = array())
 {
@@ -127,10 +127,14 @@ while ($reader->read()) {
         // Convert the XML to array
         $productArray = xmlToArray($node);
 
-        // Add product to the batch
-        $productBatch[] = $productArray;
-        $productCounter++;
 
+        $productBatch = [];
+
+        foreach ($productArray as $product) {
+            $productBatch[] = $product;
+        }
+        // Add product to the batch
+        $productCounter++;
         // Check if we've reached the batch size of 500
         if ($productCounter >= $productsPerFile) {
             // Save the current batch to a JSON file

@@ -41,13 +41,14 @@ model ProductName {
 }
 
 model Country {
-  id          Int           @id @default(autoincrement())
-  iso         String
-  name        String
-  currency    String
-  locale      String
-  mailingList MailingList[]
-  password    String
+  id              Int               @id @default(autoincrement())
+  iso             String
+  name            String
+  currency        String
+  locale          String
+  mailingList     MailingList[]
+  excludeProducts ExcludeProducts[]
+  password        String
 }
 
 model MailingList {
@@ -64,9 +65,13 @@ model Settings {
 }
 
 model ExcludeProducts {
-  id         Int      @id @default(autoincrement())
-  variantIds Int[]
-  skus       String[]
-  eans       String[]
-  names      String[]
+  id             Int      @id @default(autoincrement())
+  variantIds     Int[]
+  skus           String[]
+  eans           String[]
+  names          String[]
+  activeVariants Boolean  @default(false)
+  activeProducts Boolean  @default(false)
+  country        Country  @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  countryId      Int
 }
