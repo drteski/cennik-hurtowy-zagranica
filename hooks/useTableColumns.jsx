@@ -1,3 +1,4 @@
+"use client";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { CaretSortIcon } from "@radix-ui/react-icons";
@@ -22,6 +23,25 @@ export const useTableColumns = (country) => {
               }
             >
               <span className="block text-xs">ID</span>
+              <CaretSortIcon className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        ),
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "variantId",
+        header: (props) => (
+          <div className="w-full">
+            <Button
+              variant="ghost"
+              className="h-8 hover:bg-transparent p-0"
+              onClick={() =>
+                props.column.toggleSorting(props.column.getIsSorted() === "asc")
+              }
+            >
+              <span className="block text-xs">VARIANT ID</span>
               <CaretSortIcon className="ml-1 h-4 w-4" />
             </Button>
           </div>
@@ -167,6 +187,6 @@ export const useTableColumns = (country) => {
         },
       },
     ],
-    [],
+    [country],
   );
 };

@@ -75,6 +75,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
     "text-center text-[13px] truncate",
     "text-center text-[13px] truncate",
     "text-center text-[13px] truncate",
+    "text-center text-[13px] truncate",
     "text-left text-[13px] truncate",
     "text-right text-[13px] truncate",
   ];

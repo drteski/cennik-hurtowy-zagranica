@@ -98,9 +98,13 @@ body {
 }
 
 .table-header-5 {
+    width: 150px;
 }
 
 .table-header-6 {
+}
+
+.table-header-7 {
     width: 150px;
 }
 

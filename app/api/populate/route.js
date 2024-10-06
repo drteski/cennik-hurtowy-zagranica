@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import prisma from "@/db";
-import { config } from "../../../config/config";
+import { config } from "@/config/config";
 
 export async function GET(request) {
   const { data, translations } = config;
@@ -20,7 +20,7 @@ export async function GET(request) {
   }, []);
   await Promise.all(
     populate.map(async (pop) => {
-      const { iso, password, name, currency, locale, subject } = pop;
+      const { iso, name, currency, locale, subject } = pop;
       const existingCountry = await prisma.country.findFirst({
         where: { iso },
       });
@@ -28,21 +28,10 @@ export async function GET(request) {
       return prisma.country.create({
         data: {
           iso,
-          password,
           name,
           currency,
           locale,
-          mailingList: {
-            create: {
-              subject,
-            },
-          },
-          excludeProducts: {
-            create: {
-              activeVariants: false,
-              activeProducts: false,
-            },
-          },
+          subject,
         },
       });
     }),

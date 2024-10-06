@@ -1,5 +1,6 @@
 import { mapBrands, mapPrices, mapTitles } from "@/lib/processJson";
 import prisma from "@/db";
+import { config } from "@/config/config";
 
 export const convertProducts = (data) => {
   return data
@@ -8,17 +9,32 @@ export const convertProducts = (data) => {
         product.variants.variant.length >= 0
           ? product.variants.variant
           : [product.variants.variant];
+
+      let aliases = [];
+      if (typeof product.aliases === "string") {
+        aliases = product.aliases
+          .split(";")
+          .map((alias) => {
+            const index = config.alias.findIndex((al) => al.id === alias);
+            if (index !== -1) return config.alias[index].name;
+          })
+          .filter(Boolean);
+      }
+
       return productVariant.map((variant) => {
-        if (variant.$isActive === "true")
-          if (variant.$symbol !== "")
-            return {
-              variantId: parseInt(variant.$id),
-              sku: variant.$symbol,
-              ean: variant.$ean,
-              brand: mapBrands(product.$producer),
-              titles: mapTitles(product.titles.title),
-              prices: mapPrices(variant.basePrice),
-            };
+        return {
+          uid: parseInt(`${product.$id}${variant.$id}`),
+          id: parseInt(product.$id),
+          active: product.$active === "true",
+          activeVariant: variant.$active === "true",
+          aliases,
+          variantId: parseInt(variant.$id),
+          sku: variant.$symbol,
+          ean: variant.$ean,
+          brand: mapBrands(product.$producer),
+          titles: mapTitles(product.titles.title),
+          prices: mapPrices(variant.basePrice),
+        };
       });
     })
     .flatMap((product) => product)
@@ -28,19 +44,39 @@ export const processProducts = async (data) => {
   return new Promise(async (resolve) => {
     await Promise.all(
       data.map(async (product) => {
-        const { variantId, sku, ean, brand } = product;
+        const {
+          uid,
+          id,
+          active,
+          activeVariant,
+          variantId,
+          aliases,
+          sku,
+          ean,
+          brand,
+        } = product;
         return prisma.product.upsert({
           where: {
-            id: variantId,
+            uid,
           },
           update: {
-            id: variantId,
+            uid,
+            active,
+            id,
+            activeVariant,
+            variantId,
+            alias: aliases,
             sku,
             ean,
             brand,
           },
           create: {
-            id: variantId,
+            uid,
+            active,
+            id,
+            activeVariant,
+            variantId,
+            alias: aliases,
             sku,
             ean,
             brand,
@@ -55,10 +91,10 @@ export const processPrices = async (data) => {
   return new Promise(async (resolve) => {
     const pricesToSave = [];
     data.forEach((product) => {
-      const { variantId, prices } = product;
+      const { uid, prices } = product;
       pricesToSave.push(
         ...prices.map((price) => ({
-          variantId,
+          uid,
           lang: price.lang,
           currency: price.currency,
           price: price.price,
@@ -68,11 +104,11 @@ export const processPrices = async (data) => {
     await Promise.all(
       pricesToSave
         .map(async (prices) => {
-          const { variantId, lang, currency, price } = prices;
+          const { uid, lang, currency, price } = prices;
           const existingPrice = await prisma.productPrice.findFirst({
             where: {
               lang: lang,
-              productId: variantId,
+              productId: uid,
             },
           });
           if (existingPrice) {
@@ -87,7 +123,7 @@ export const processPrices = async (data) => {
                 newPrice: price,
                 product: {
                   connect: {
-                    id: variantId,
+                    uid,
                   },
                 },
               },
@@ -101,7 +137,7 @@ export const processPrices = async (data) => {
                 newPrice: price,
                 product: {
                   connect: {
-                    id: variantId,
+                    uid,
                   },
                 },
               },
@@ -117,10 +153,10 @@ export const processTitles = async (data) => {
   return new Promise(async (resolve) => {
     const titlesToSave = [];
     data.forEach((product) => {
-      const { variantId, titles } = product;
+      const { uid, titles } = product;
       titlesToSave.push(
         ...titles.map((title) => ({
-          variantId,
+          uid,
           lang: title.lang,
           name: title.value,
         })),
@@ -129,11 +165,11 @@ export const processTitles = async (data) => {
     await Promise.all(
       titlesToSave
         .map(async (title) => {
-          const { variantId, lang, name } = title;
+          const { uid, lang, name } = title;
           const existingTitle = await prisma.productName.findFirst({
             where: {
               lang: title.lang,
-              productId: variantId,
+              productId: uid,
             },
           });
           if (existingTitle) {
@@ -147,7 +183,7 @@ export const processTitles = async (data) => {
                   name,
                   product: {
                     connect: {
-                      id: variantId,
+                      uid,
                     },
                   },
                 },
@@ -160,7 +196,7 @@ export const processTitles = async (data) => {
                 name,
                 product: {
                   connect: {
-                    id: variantId,
+                    uid,
                   },
                 },
               },

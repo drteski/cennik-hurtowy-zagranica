@@ -212,6 +212,21 @@ export const config = {
     { iso: "ie", subject: "Price Changes | Podlasiak" },
     { iso: "si", subject: "Spremembe cen | Podlasiak" },
   ],
+  alias: [
+    {
+      id: "4",
+      name: "Tutumi",
+    },
+    {
+      id: "5",
+      name: "Rea",
+    },
+    {
+      id: "9",
+      name: "Toolight",
+    },
+  ],
+
   brands: [
     {
       id: "16",
