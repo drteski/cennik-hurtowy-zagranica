@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { config } from "@/config/config";
-import NotFound from "@/app/not-found";
 
 const secret = process.env.SECRET;
 

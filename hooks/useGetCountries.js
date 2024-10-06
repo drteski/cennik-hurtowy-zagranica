@@ -12,7 +12,7 @@ const useGetCountries = () => {
       }));
   };
   const { data, error, isError, isLoading } = useQuery({
-    queryKey: ["country"],
+    queryKey: ["countries"],
     queryFn: getCountries,
   });
   return { data, error, isError, isLoading };

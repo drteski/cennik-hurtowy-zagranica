@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react";
 import LoadingState from "@/app/loading";
 import { redirect } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users } from "@/components/settings/Users";
-import { Countries } from "@/components/settings/Countries";
+import { Users } from "@/components/settings/users/Users";
+import { Countries } from "@/components/settings/countries/Countries";
 
 const SettingsPage = () => {
   const session = useSession();
