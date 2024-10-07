@@ -19,18 +19,16 @@ model User {
 }
 
 model UserProducts {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   ids            Int[]
   variantIds     Int[]
   skus           String[]
   eans           String[]
   names          String[]
-  activeVariants Boolean  @default(false)
-  activeProducts Boolean  @default(false)
-  country        Country  @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  countryId      Int
-  User           User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId         Int
+  activeVariants Boolean   @default(false)
+  activeProducts Boolean   @default(false)
+  country        Country[]
+  User           User[]
 }
 
 model Country {

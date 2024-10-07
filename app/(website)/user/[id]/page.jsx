@@ -38,8 +38,9 @@ const UserPage = ({ params }) => {
           email: emailRef.current.value,
           password: passwordRef.current.value,
         })
-        .then(() => {
-          setTooltip("Saved");
+        .then((res) => {
+          console.log(res.data.message);
+          setTooltip(res.data.message);
           setTimeout(() => setTooltip(""), 2000);
         });
     }

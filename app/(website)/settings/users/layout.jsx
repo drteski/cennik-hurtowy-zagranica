@@ -6,7 +6,6 @@ import { redirect, usePathname } from "next/navigation";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import useGetCountries from "@/hooks/useGetCountries";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
@@ -31,7 +30,6 @@ const SettingsUsersLayout = ({ children }) => {
       ),
     );
   };
-
   const session = useSession();
   if (session.status === "loading") {
     return <LoadingState />;
@@ -55,11 +53,11 @@ const SettingsUsersLayout = ({ children }) => {
           </Button>
         </div>
         <div className="w-full h-[calc(100dvh_-_116px_-_40px_-_36px)]">
-          <div className="bg-gray-100 grid grid-cols-[300px_1fr] gap-4 rounded-lg mt-2 h-full p-4">
+          <div className="bg-gray-100 grid grid-cols-[300px_1fr] rounded-lg mt-2 h-full py-4">
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <div className="grid grid-rows-[auto_1fr_auto] gap-4">
+              <div className="grid grid-rows-[auto_1fr_auto] gap-4 pl-4 pr-2">
                 <Input
                   onChange={handleSearch}
                   placeholder="Search"

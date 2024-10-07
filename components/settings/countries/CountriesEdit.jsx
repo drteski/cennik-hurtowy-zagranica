@@ -50,7 +50,7 @@ export const CountriesEdit = ({ id }) => {
         <HeaderSmall className="text-left" text={data.name} />
       )}
       {tooltip !== "" && (
-        <span className="absolute top-4 right-4 text-sm text-gray-500 py-4 block">
+        <span className="absolute top-0 right-4 text-sm text-gray-500 py-2 block">
           {tooltip}
         </span>
       )}

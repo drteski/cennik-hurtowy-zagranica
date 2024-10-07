@@ -6,6 +6,8 @@ import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { useSession } from "next-auth/react";
 import NotFound from "@/app/not-found";
 import LoadingState from "@/app/loading";
+import { Button } from "@/components/ui/button";
+import { CarbonSettings } from "@/components/Layout/Icones";
 
 const BasePage = () => {
   const session = useSession();
@@ -42,6 +44,17 @@ const BasePage = () => {
         >
           <Logo alias="Tutumi" />
         </Link>
+      </div>
+      <div className="flex w-full justify-end items-center">
+        {session.data.user.role === "admin" ? (
+          <Button size="icon" asChild>
+            <Link href="/settings">
+              <CarbonSettings className="h-5 w-5" />
+            </Link>
+          </Button>
+        ) : (
+          <></>
+        )}
       </div>
     </main>
   );
