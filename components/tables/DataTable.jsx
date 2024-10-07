@@ -23,7 +23,7 @@ import {
   CarbonChevronRight,
   CarbonPageFirst,
   CarbonPageLast,
-} from "@/components/Icones";
+} from "@/components/Layout/Icones";
 import {
   Select,
   SelectContent,

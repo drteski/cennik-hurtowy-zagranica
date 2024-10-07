@@ -75,7 +75,12 @@ export const CountriesEdit = ({ id }) => {
         ) : (
           <div className="flex flex-col gap-2">
             <Label>Country Code</Label>
-            <Input ref={isoRef} className="bg-white" defaultValue={data.iso} />
+            <Input
+              ref={isoRef}
+              className="bg-white"
+              defaultValue={data.iso}
+              disabled
+            />
           </div>
         )}
         {isLoading ? (
@@ -87,6 +92,7 @@ export const CountriesEdit = ({ id }) => {
               ref={localeRef}
               className="bg-white"
               defaultValue={data.locale}
+              disabled
             />
           </div>
         )}
@@ -99,6 +105,7 @@ export const CountriesEdit = ({ id }) => {
               ref={currencyRef}
               className="bg-white"
               defaultValue={data.currency}
+              disabled
             />
           </div>
         )}

@@ -14,6 +14,7 @@ import { ChevronRight } from "lucide-react";
 
 const SettingsCountriesLayout = ({ children }) => {
   const path = usePathname();
+  const currentCountry = parseInt(path.replace("/settings/countries/", ""));
   const { data, isLoading } = useGetCountries();
   const [countries, setCountries] = useState([]);
   useEffect(() => {
@@ -63,10 +64,14 @@ const SettingsCountriesLayout = ({ children }) => {
                   placeholder="Search"
                   className="bg-white"
                 />
-                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_32px_-_36px)]">
+                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_14px)]">
                   {countries.map((country) => {
                     return (
-                      <Button key={country.id} asChild>
+                      <Button
+                        key={country.id}
+                        asChild
+                        className={`${currentCountry === country.id ? "bg-gray-500" : ""}`}
+                      >
                         <Link
                           className="flex justify-between items-center"
                           href={`/settings/countries/${country.id}`}
@@ -78,9 +83,6 @@ const SettingsCountriesLayout = ({ children }) => {
                     );
                   })}
                 </div>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/settings/countries/new">New country</Link>
-                </Button>
               </div>
             )}
             {children}

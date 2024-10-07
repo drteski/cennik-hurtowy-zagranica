@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Logo } from "@/components/Logos";
+import { Logo } from "@/components/Layout/Logos";
 import { HeaderMain } from "@/components/Layout/HeaderMain";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { useSession } from "next-auth/react";

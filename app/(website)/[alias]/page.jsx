@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CarbonSettings } from "@/components/Icones";
-import { Logo } from "@/components/Logos";
+import { CarbonSettings } from "@/components/Layout/Icones";
+import { Logo } from "@/components/Layout/Logos";
 import { useSession } from "next-auth/react";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { CountriesList } from "@/components/CountriesList";

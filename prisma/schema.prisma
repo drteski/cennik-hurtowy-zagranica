@@ -34,14 +34,14 @@ model UserProducts {
 }
 
 model Country {
-  id              Int            @id @default(autoincrement())
-  iso             String
-  name            String
-  currency        String
-  locale          String
-  subject         String
-  excludeProducts UserProducts[]
-  users           User[]
+  id           Int            @id @default(autoincrement())
+  iso          String
+  name         String
+  currency     String
+  locale       String
+  subject      String
+  userProducts UserProducts[]
+  users        User[]
 }
 
 model Product {

@@ -18,7 +18,7 @@ export const CountriesList = ({ user, alias }) => {
       ) : (
         <>
           {data.country.length === 0 ? (
-            <span className="block text-3xl font-medium uppercase">
+            <span className="block text-3xl font-medium text-center uppercase col-span-4">
               No countries added
             </span>
           ) : (

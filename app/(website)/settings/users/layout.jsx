@@ -15,6 +15,7 @@ import useGetUsers from "@/hooks/useGetUsers";
 
 const SettingsUsersLayout = ({ children }) => {
   const path = usePathname();
+  const currentUser = parseInt(path.replace("/settings/users/", ""));
   const { data, isLoading } = useGetUsers();
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -67,7 +68,11 @@ const SettingsUsersLayout = ({ children }) => {
                 <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_32px_-_36px)]">
                   {users.map((user) => {
                     return (
-                      <Button key={user.id} asChild>
+                      <Button
+                        key={user.id}
+                        asChild
+                        className={`${currentUser === user.id ? "bg-gray-500" : ""}`}
+                      >
                         <Link
                           className="flex justify-between items-center"
                           href={`/settings/users/${user.id}`}

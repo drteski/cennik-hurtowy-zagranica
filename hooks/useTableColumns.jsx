@@ -6,7 +6,7 @@ import {
   CarbonSubtract,
   CarbonTriangleDownSolid,
   CarbonTriangleSolid,
-} from "@/components/Icones";
+} from "@/components/Layout/Icones";
 
 export const useTableColumns = (country) => {
   return useMemo(

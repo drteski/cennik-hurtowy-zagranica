@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "@/components/Icones";
+import { LoadingSpinner } from "@/components/Layout/Icones";
 
 const LoadingState = () => {
   return (

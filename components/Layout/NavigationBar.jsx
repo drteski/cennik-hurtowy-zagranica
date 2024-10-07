@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CarbonChevronLeft, CarbonLogout } from "@/components/Icones";
+import { CarbonChevronLeft, CarbonLogout } from "@/components/Layout/Icones";
 import { signOut } from "next-auth/react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 

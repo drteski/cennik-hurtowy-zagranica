@@ -1,6 +1,6 @@
 import "./globals.css";
 import { IBM_Plex_Sans } from "next/font/google";
-import { Providers } from "@/components/Providers";
+import { Providers } from "@/components/Layout/Providers";
 
 const inter = IBM_Plex_Sans({
   weight: ["100", "300", "400", "500", "700"],
