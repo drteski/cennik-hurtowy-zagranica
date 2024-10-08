@@ -102,7 +102,7 @@ export const UsersEdit = ({ id }) => {
       {!data ? (
         <></>
       ) : (
-        <div className="relative">
+        <div className="relative overflow-hidden ">
           {isLoading ? (
             <Skeleton className="w-1/2 h-9" />
           ) : (
@@ -126,7 +126,7 @@ export const UsersEdit = ({ id }) => {
             className="grid grid-rows-[1fr_auto] h-[calc(100dvh_-_80px_-_72px_-_40px_-_70px)] pt-10"
             onSubmit={(e) => handleUsersEdit.mutate(e)}
           >
-            <div className=" overflow-y-auto pl-2 pr-4">
+            <div className="overflow-y-scroll pl-2 pr-4">
               <div className="flex flex-col">
                 {isLoading ? (
                   <Skeleton className="w-full h-[16px]" />
@@ -266,10 +266,18 @@ export const UsersEdit = ({ id }) => {
                   <Skeleton className="w-full h-[140px] mt-10" />
                 </>
               ) : (
-                <UsersProductsEdit
-                  userProducts={userProducts}
-                  setUserProducts={setUserProducts}
-                />
+                <>
+                  {countries.isLoading ? (
+                    <></>
+                  ) : (
+                    <UsersProductsEdit
+                      allCountries={countries.data}
+                      userCountries={data.country}
+                      userProducts={userProducts}
+                      setUserProducts={setUserProducts}
+                    />
+                  )}
+                </>
               )}
             </div>
             {isLoading ? (

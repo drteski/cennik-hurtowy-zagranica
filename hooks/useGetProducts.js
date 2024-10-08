@@ -12,7 +12,7 @@ const useGetProducts = (alias, lang, user) => {
       }));
   };
   const { data, error, isError, isLoading } = useQuery({
-    queryKey: ["products", alias, lang],
+    queryKey: ["products", alias, lang, user],
     queryFn: getProducts,
   });
   return { data, error, isError, isLoading };

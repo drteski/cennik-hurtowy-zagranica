@@ -25,6 +25,7 @@ model UserProducts {
   skus           String[]
   eans           String[]
   names          String[]
+  onlyWithSku    Boolean   @default(false)
   activeVariants Boolean   @default(false)
   activeProducts Boolean   @default(false)
   country        Country[]

@@ -13,6 +13,7 @@ export const TableContainer = ({ country, alias, user }) => {
   const [products, setProducts] = useState([]);
   useEffect(() => {
     if (!isLoading) {
+      if (data.length === 0) return;
       const productsWithDifferences = data.filter(
         (product) => product.price.difference !== 0,
       );
@@ -32,6 +33,7 @@ export const TableContainer = ({ country, alias, user }) => {
       );
       setPriceChanges(priceChanges);
       setProducts([...productsWithDifferences, ...productsWithoutDifferences]);
+      return () => {};
     }
   }, [data, isLoading]);
   return (

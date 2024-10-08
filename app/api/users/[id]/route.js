@@ -133,22 +133,29 @@ export const POST = async (request, { params }) => {
           const userProductsIndex = userProducts.findIndex(
             (product) => product.id === existingUserProducts.id,
           );
-          console.log(
-            existingUserProducts,
-            // userProducts,
-            // userProductsIndex,
-          );
+          console.log(userProductsIndex);
           if (userProductsIndex !== -1) {
             return prisma.userProducts.update({
               where: {
                 id: userProducts[userProductsIndex].id,
               },
               data: {
-                ids: userProducts[userProductsIndex].ids,
-                variantIds: userProducts[userProductsIndex].variantIds,
-                skus: userProducts[userProductsIndex].skus,
-                eans: userProducts[userProductsIndex].eans,
-                names: userProducts[userProductsIndex].names,
+                ids: userProducts[userProductsIndex].ids.map((item) =>
+                  parseInt(item),
+                ),
+                variantIds: userProducts[userProductsIndex].variantIds.map(
+                  (item) => parseInt(item),
+                ),
+                skus: userProducts[userProductsIndex].skus.map((item) =>
+                  item.replace(/\s/gm, ""),
+                ),
+                eans: userProducts[userProductsIndex].eans.map((item) =>
+                  item.replace(/\s/gm, ""),
+                ),
+                names: userProducts[userProductsIndex].names.map(
+                  (item) => item,
+                ),
+                onlyWithSku: userProducts[userProductsIndex].onlyWithSku,
                 activeProducts: userProducts[userProductsIndex].activeProducts,
                 activeVariants: userProducts[userProductsIndex].activeVariants,
                 country: {
@@ -169,9 +176,9 @@ export const POST = async (request, { params }) => {
             data: {
               ids: [],
               variantIds: [],
-              skus: [],
-              eans: [],
-              names: [],
+              skus: [""],
+              eans: [""],
+              names: [""],
               country: {
                 connect: {
                   id: country,
