@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Serwis Podlasiak",
+  title: "Prices Podlasiak",
 };
 
 const LoginLayout = ({ children }) => {

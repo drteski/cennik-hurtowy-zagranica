@@ -25,8 +25,51 @@ export async function GET(request, { params }) {
       },
     },
   });
+  const userProductExclusions = user.userProducts[0];
   const products = await prisma.product.findMany({
-    where: {},
+    where: {
+      ...(userProductExclusions.onlyWithSku
+        ? {
+            sku: {
+              not: "",
+            },
+          }
+        : {}),
+      ...(userProductExclusions.activeVariants
+        ? {
+            activeVariant: true,
+          }
+        : {}),
+      ...(userProductExclusions.activeProducts
+        ? {
+            active: true,
+          }
+        : {}),
+      NOT: {
+        OR: [
+          {
+            id: {
+              in: userProductExclusions.ids,
+            },
+          },
+          {
+            variantId: {
+              in: userProductExclusions.variantIds,
+            },
+          },
+          {
+            sku: {
+              in: userProductExclusions.skus,
+            },
+          },
+          {
+            ean: {
+              in: userProductExclusions.eans,
+            },
+          },
+        ],
+      },
+    },
     include: {
       names: {
         where: {
@@ -36,54 +79,53 @@ export async function GET(request, { params }) {
       prices: {
         where: {
           lang: params.lang,
+          NOT: {
+            OR: [
+              {
+                newPrice: 0,
+              },
+              {
+                oldPrice: 0,
+              },
+            ],
+          },
         },
       },
     },
   });
-
   const selectedProducts = products
-    .filter((product) =>
-      product.alias.some((alias) => alias.toLowerCase() === params.alias),
-    )
+    .filter((product) => {
+      if (params.alias === "rea") {
+        return product.brand === "Rea";
+      }
+      if (params.alias === "tutumi") {
+        return (
+          product.brand === "Tutumi" ||
+          product.brand === "FlexiFit" ||
+          product.brand === "Bluegarden" ||
+          product.brand === "PuppyJoy" ||
+          product.brand === "Kigu" ||
+          product.brand === "Fluffy Glow"
+        );
+      }
+      if (params.alias === "toolight") {
+        return product.brand === "Toolight" || product.brand === "Spectrum LED";
+      }
+    })
+    .filter((product) => product.prices.length !== 0)
     .filter(
-      (product) => !user.userProducts[0].ids.some((id) => id === product.id),
+      (product) =>
+        !userProductExclusions.names.some((name) =>
+          product.names[0].name.toLowerCase().includes(name.toLowerCase()),
+        ),
     )
-    // .filter(
-    //   (product) =>
-    //     !user.userProducts[0].variantIds.some((id) => id === product.variantId),
-    // )
-    // .filter(
-    //   (product) =>
-    //     !user.userProducts[0].skus.some(
-    //       (sku) => sku.toLowerCase() === product.sku.toLowerCase(),
-    //     ),
-    // )
-    // .filter(
-    //   (product) =>
-    //     !user.userProducts[0].eans.some((ean) => ean === product.ean),
-    // )
-    // .filter(
-    //   (product) =>
-    //     !user.userProducts[0].names.some((name) =>
-    //       product.names[0].name.toLowerCase().includes(name.toLowerCase()),
-    //     ),
-    // )
-    // .filter((product) =>
-    //   user.userProducts[0].onlyWithSku ? product.sku !== "" : true,
-    // )
-    // .filter((product) =>
-    //   user.userProducts[0].activeVariants ? product.activeVariant : false,
-    // )
-    // .filter((product) =>
-    //   user.userProducts[0].activeProducts ? product.active : false,
-    // )
     .map((product) => {
       const { brand, ean, id, names, prices, sku, variantId } = product;
 
       if (names.length === 0 || prices.length === 0) {
         return {
-          id,
-          variantId,
+          id: `${id}`,
+          variantId: `${variantId}`,
           ean,
           sku,
           brand,
@@ -98,8 +140,8 @@ export async function GET(request, { params }) {
         };
       }
       return {
-        id,
-        variantId,
+        id: `${id}`,
+        variantId: `${variantId}`,
         ean,
         sku,
         brand,

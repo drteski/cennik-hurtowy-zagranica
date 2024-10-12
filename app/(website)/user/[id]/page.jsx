@@ -7,21 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useGetUser from "@/hooks/useGetUser";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { HeaderMain } from "@/components/Layout/HeaderMain";
 import { HeaderMedium } from "@/components/Layout/HeaderMedium";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const UserPage = ({ params }) => {
   const session = useSession();
   const [tooltip, setTooltip] = useState("");
+  const [sendNotification, setSendNotification] = useState();
   const queryClient = useQueryClient();
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const { data, isLoading } = useGetUser(parseInt(params.id));
+
+  useEffect(() => {
+    if (!isLoading) {
+      setSendNotification(data.sendNotification);
+    }
+  }, [data, isLoading]);
 
   const handleUser = async (e) => {
     e.preventDefault();
@@ -37,9 +45,10 @@ const UserPage = ({ params }) => {
           name: nameRef.current.value,
           email: emailRef.current.value,
           password: passwordRef.current.value,
+          sendNotification,
         })
-        .then((res) => {
-          console.log(res.data.message);
+        .then(async (res) => {
+          await session.update({ user: { name: nameRef.current.value } });
           setTooltip(res.data.message);
           setTimeout(() => setTooltip(""), 2000);
         });
@@ -54,12 +63,18 @@ const UserPage = ({ params }) => {
   if (session.status === "loading") {
     return <LoadingState />;
   }
+
   if (params.id !== session.data.user.id.toString()) return redirect("/");
 
   return (
     <main className="flex flex-col min-w-[768px] h-screen relative">
       <div className="p-10 flex justify-between items-center">
-        <NavigationBar user={session.data.user} backPath={`/`} showLogout />
+        <NavigationBar
+          user={data}
+          backPath={`/`}
+          loadingState={isLoading}
+          showLogout
+        />
       </div>
       <div className="grid grid-rows-[auto_auto_1fr] justify-center h-full  p-10">
         <HeaderMain text="Profile edit" />
@@ -103,6 +118,20 @@ const UserPage = ({ params }) => {
               <Label className="mt-8">Password</Label>
               <Input ref={passwordRef} type="password" />
             </>
+          )}
+          {isLoading ? (
+            <Skeleton className="w-full h-[16px]" />
+          ) : (
+            <div className="flex gap-2 items-center py-4">
+              <Checkbox
+                id="sendNotification"
+                onCheckedChange={(value) => setSendNotification(value)}
+                defaultChecked={data.sendNotification}
+              />
+              <Label htmlFor="sendNotification">
+                Recive email notifications
+              </Label>
+            </div>
           )}
 
           <Button>Save</Button>

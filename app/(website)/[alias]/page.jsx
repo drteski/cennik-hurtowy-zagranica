@@ -8,19 +8,28 @@ import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { CountriesList } from "@/components/CountriesList";
 import LoadingState from "@/app/loading";
 import NotFound from "@/app/not-found";
+import { useMemo } from "react";
+import useGetUsers from "@/hooks/useGetUsers";
 
 const AliasPage = ({ params }) => {
   const { alias } = params;
   const aliases = ["rea", "tutumi", "toolight"];
   const session = useSession();
+  const { data, isLoading } = useGetUsers();
+  const user = useMemo(() => {
+    if (!isLoading && session.status !== "loading")
+      return data.filter((user) => user.id === session.data.user.id)[0];
+    return {};
+  }, [data, isLoading, session.status]);
   if (!aliases.some((al) => al === alias)) return NotFound();
   if (session.status === "loading") {
-    return <LoadingState />;
+    return <LoadingState size="md" />;
   }
   return (
     <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
-        user={session.data.user}
+        user={user}
+        loadingState={isLoading}
         backPath="/"
         showUser
         showLogout
@@ -35,7 +44,7 @@ const AliasPage = ({ params }) => {
         <CountriesList user={session.data.user} alias={alias} />
       </div>
       <div className="flex justify-end items-center">
-        {session.data.user.role === "admin" ? (
+        {user?.role === "admin" ? (
           <Button size="icon" asChild>
             <Link href="/settings">
               <CarbonSettings className="h-5 w-5" />

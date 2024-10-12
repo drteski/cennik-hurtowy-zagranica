@@ -4,20 +4,28 @@ import { Logo } from "@/components/Layout/Logos";
 import { HeaderMain } from "@/components/Layout/HeaderMain";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { useSession } from "next-auth/react";
-import NotFound from "@/app/not-found";
 import LoadingState from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { CarbonSettings } from "@/components/Layout/Icones";
+import { useMemo } from "react";
+import useGetUsers from "@/hooks/useGetUsers";
 
 const BasePage = () => {
   const session = useSession();
+  const { data, isLoading } = useGetUsers();
+  const user = useMemo(() => {
+    if (!isLoading)
+      return data.filter((user) => user.id === session.data.user.id)[0];
+    return {};
+  }, [data, isLoading]);
   if (session.status === "loading") {
     return <LoadingState />;
   }
   return (
     <main className="h-screen flex flex-col justify-center items-center min-w-[768px] p-10">
       <NavigationBar
-        user={session.data.user}
+        user={user}
+        loadingState={isLoading}
         backPath={""}
         showUser
         showLogout

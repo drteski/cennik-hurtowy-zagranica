@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CarbonChevronLeft, CarbonLogout } from "@/components/Layout/Icones";
 import { signOut } from "next-auth/react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const NavigationBar = ({
   user,
@@ -12,6 +13,7 @@ export const NavigationBar = ({
   showCountry,
   showLogout,
   showUser,
+  loadingState,
 }) => {
   return (
     <div
@@ -26,11 +28,17 @@ export const NavigationBar = ({
       )}
       {showCountry && <HeaderSmall text={country.name} />}
       {showUser && (
-        <Button className="justify-self-end" asChild>
-          <Link className="uppercase" href={`/user/${user.id}`}>
-            {user.name}
-          </Link>
-        </Button>
+        <>
+          {loadingState ? (
+            <Skeleton className="justify-self-end h-9 w-64" />
+          ) : (
+            <Button className="justify-self-end" asChild>
+              <Link className="uppercase" href={`/user/${user.id}`}>
+                {user.name}
+              </Link>
+            </Button>
+          )}
+        </>
       )}
       {showLogout && (
         <Button

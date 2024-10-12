@@ -53,8 +53,6 @@ export const UsersProductsEdit = ({
     });
   };
 
-  console.log(userProducts);
-
   return (
     <div className="">
       {countries.length === 0 ? (

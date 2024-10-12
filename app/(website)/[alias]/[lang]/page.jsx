@@ -4,27 +4,48 @@ import { useSession } from "next-auth/react";
 import LoadingState from "@/app/loading";
 import { redirect } from "next/navigation";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
+import useGetUsers from "@/hooks/useGetUsers";
+import { useMemo } from "react";
+import useGetCountries from "@/hooks/useGetCountries";
 
 const LangPage = ({ params }) => {
   const { alias, lang } = params;
   const session = useSession();
+  const { data, isLoading } = useGetUsers();
+  const countries = useGetCountries();
+
+  const user = useMemo(() => {
+    if (!isLoading && session.status !== "loading")
+      return data.filter((user) => user.id === session.data.user.id)[0];
+    return {};
+  }, [data, isLoading, session.status]);
+
+  const currentCountry = useMemo(() => {
+    if (!countries.isLoading)
+      return countries.data.filter((country) => country.iso === lang)[0];
+    return {};
+  }, [countries.data, countries.isLoading]);
+
   if (session.status === "loading") {
     return <LoadingState />;
   }
-  const isUserAllowed = session.data.user.country.some(
-    (country) => country.iso === lang,
-  );
-  if (!isUserAllowed) return redirect(`/${alias}`);
+  if (countries.isLoading) {
+    return <LoadingState />;
+  }
+  if (isLoading) {
+    return <LoadingState />;
+  }
 
-  const currentCountry = session.data.user.country.filter(
-    (country) => country.iso === lang,
-  )[0];
+  const isUserAllowed = user.country.some((country) => country.iso === lang);
+
+  if (!isUserAllowed) return redirect(`/${alias}`);
 
   return (
     <main className="flex flex-col min-w-[768px]">
       <div className="p-10 flex justify-between items-center">
         <NavigationBar
-          user={session.data.user}
+          user={user}
+          loadingState={isLoading}
           country={currentCountry}
           backPath={`/${alias}`}
           showUser
@@ -32,11 +53,7 @@ const LangPage = ({ params }) => {
           showCountry
         />
       </div>
-      <TableContainer
-        country={currentCountry}
-        alias={alias}
-        user={session.data.user.id}
-      />
+      <TableContainer country={currentCountry} alias={alias} user={user.id} />
     </main>
   );
 };

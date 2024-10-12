@@ -27,7 +27,7 @@ export const useTableColumns = (country) => {
             </Button>
           </div>
         ),
-        cell: (info) => info.getValue(),
+        cell: (info) => `${info.getValue()}`,
         footer: (props) => props.column.id,
       },
       {
@@ -46,7 +46,7 @@ export const useTableColumns = (country) => {
             </Button>
           </div>
         ),
-        cell: (info) => info.getValue(),
+        cell: (info) => `${info.getValue()}`,
         footer: (props) => props.column.id,
       },
       {

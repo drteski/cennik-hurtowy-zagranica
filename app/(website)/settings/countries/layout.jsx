@@ -33,7 +33,7 @@ const SettingsCountriesLayout = ({ children }) => {
 
   const session = useSession();
   if (session.status === "loading") {
-    return <LoadingState />;
+    return <LoadingState size="md" />;
   }
   if (session.data.user.role !== "admin") return redirect("/");
   return (

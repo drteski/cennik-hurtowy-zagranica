@@ -9,7 +9,7 @@ export const Filter = ({ column }) => {
     <Input
       type="text"
       value={column.getFilterValue() ?? ""}
-      onChange={(e) => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(`${e.target.value}`)}
       placeholder={`Search ${column.id}...`}
       className="bg-white"
     />

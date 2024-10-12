@@ -22,7 +22,7 @@ export const GET = async (request, { params }) => {
 };
 
 export const PUT = async (request, { params }) => {
-  const { name, email, password } = await request.json();
+  const { name, email, sendNotification, password } = await request.json();
   const existingUser = await prisma.user.findUnique({
     where: {
       email,
@@ -41,8 +41,9 @@ export const PUT = async (request, { params }) => {
       ? {
           name,
           email,
+          sendNotification,
         }
-      : { name, email, password: await argon.hash(password) };
+      : { name, email, sendNotification, password: await argon.hash(password) };
 
   const user = await prisma.user.update({
     where: {
@@ -59,22 +60,37 @@ export const PUT = async (request, { params }) => {
 };
 
 export const POST = async (request, { params }) => {
-  const { active, name, email, password, countries, userProducts, role } =
-    await request.json();
-  const existingUser = await prisma.user.findUnique({
+  const {
+    active,
+    name,
+    email,
+    password,
+    countries,
+    sendNotification,
+    userProducts,
+    role,
+  } = await request.json();
+  const existingUserWithEmail = await prisma.user.findUnique({
     where: {
       email,
     },
   });
-
-  if (existingUser.id !== parseInt(params.id)) {
-    return new NextResponse(
-      JSON.stringify({ message: `E-mail is already used by another user` }),
-      {
-        status: 200,
-      },
-    );
+  if (existingUserWithEmail) {
+    if (existingUserWithEmail.id !== parseInt(params.id)) {
+      return new NextResponse(
+        JSON.stringify({ message: `E-mail is already used by another user` }),
+        {
+          status: 200,
+        },
+      );
+    }
   }
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: parseInt(params.id),
+    },
+  });
+
   const allCountries = await prisma.country.findMany();
   await prisma.user.update({
     where: {
@@ -84,6 +100,7 @@ export const POST = async (request, { params }) => {
       active,
       name,
       email,
+      sendNotification,
       role,
       password:
         password === "" ? existingUser.password : await argon.hash(password),
@@ -133,7 +150,6 @@ export const POST = async (request, { params }) => {
           const userProductsIndex = userProducts.findIndex(
             (product) => product.id === existingUserProducts.id,
           );
-          console.log(userProductsIndex);
           if (userProductsIndex !== -1) {
             return prisma.userProducts.update({
               where: {

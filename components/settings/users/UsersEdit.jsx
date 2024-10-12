@@ -21,11 +21,14 @@ import {
 } from "@/components/ui/select";
 import { UsersProductsEdit } from "@/components/settings/users/UsersProductsEdit";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export const UsersEdit = ({ id }) => {
+  const session = useSession();
   const [tooltip, setTooltip] = useState("");
   const [role, setRole] = useState("");
   const [activeUser, setActiveUser] = useState(false);
+  const [sendNotification, setSendNotification] = useState(false);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
   const { data, isLoading } = useGetUser(id);
@@ -40,6 +43,7 @@ export const UsersEdit = ({ id }) => {
     if (!isLoading) {
       setRole(data.role);
       setActiveUser(data.active);
+      setSendNotification(data.sendNotification);
       setUserProducts(
         data.userProducts.map((product) => {
           return { ...product, country: product.country[0] };
@@ -57,13 +61,13 @@ export const UsersEdit = ({ id }) => {
     const name = nameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    console.log(userProducts);
     await axios
       .post(`/api/users/${id}`, {
         active: activeUser,
         name,
         email,
         password,
+        sendNotification,
         countries: selectedCountries,
         userProducts,
         role,
@@ -127,7 +131,7 @@ export const UsersEdit = ({ id }) => {
             onSubmit={(e) => handleUsersEdit.mutate(e)}
           >
             <div className="overflow-y-scroll pl-2 pr-4">
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-4">
                 {isLoading ? (
                   <Skeleton className="w-full h-[16px]" />
                 ) : (
@@ -138,6 +142,20 @@ export const UsersEdit = ({ id }) => {
                       defaultChecked={data.active}
                     />
                     <Label htmlFor="activeUser">Active</Label>
+                  </div>
+                )}
+                {isLoading ? (
+                  <Skeleton className="w-full h-[16px]" />
+                ) : (
+                  <div className="flex gap-2 items-center">
+                    <Checkbox
+                      id="sendNotification"
+                      onCheckedChange={(value) => setSendNotification(value)}
+                      defaultChecked={data.sendNotification}
+                    />
+                    <Label htmlFor="sendNotification">
+                      Send email notifications
+                    </Label>
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-4 pt-4">

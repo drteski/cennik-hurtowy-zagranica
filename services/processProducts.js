@@ -26,7 +26,7 @@ export const convertProducts = (data) => {
           uid: parseInt(`${product.$id}${variant.$id}`),
           id: parseInt(product.$id),
           active: product.$active === "true",
-          activeVariant: variant.$active === "true",
+          activeVariant: variant.$isActive === "true",
           aliases,
           variantId: parseInt(variant.$id),
           sku: variant.$symbol,
