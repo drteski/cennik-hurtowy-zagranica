@@ -21,10 +21,8 @@ import {
 } from "@/components/ui/select";
 import { UsersProductsEdit } from "@/components/settings/users/UsersProductsEdit";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 export const UsersEdit = ({ id }) => {
-  const session = useSession();
   const [tooltip, setTooltip] = useState("");
   const [role, setRole] = useState("");
   const [activeUser, setActiveUser] = useState(false);

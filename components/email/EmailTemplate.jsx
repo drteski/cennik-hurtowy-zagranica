@@ -50,7 +50,6 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
               padding: "3px 6px",
               color: "black",
               textAlign: "left",
-              // width: "40%",
               fontWeight: "700",
               fontSize: 14,
             }}
@@ -131,7 +130,7 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
                   fontSize: 12,
                 }}
               >
-                {item.title}
+                {item.name}
               </Column>
               <Column
                 style={{
@@ -145,15 +144,15 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
                 {new Intl.NumberFormat(locale, {
                   style: "currency",
                   currency: currency,
-                }).format(parseFloat(item.oldPrice))}
+                }).format(parseFloat(item.price.oldPrice))}
               </Column>
               <Column
                 style={{
                   padding: "3px 6px",
                   color:
-                    item.difference === 0
+                    item.price.difference === 0
                       ? "black"
-                      : item.difference < 0
+                      : item.price.difference < 0
                         ? "#da1e28"
                         : "#24a148",
                   textAlign: "right",
@@ -165,7 +164,7 @@ const EmailTemplate = ({ data, locale, name, currency }) => {
                 {new Intl.NumberFormat(locale, {
                   style: "currency",
                   currency: currency,
-                }).format(parseFloat(item.newPrice))}
+                }).format(parseFloat(item.price.newPrice))}
               </Column>
             </Row>
           );

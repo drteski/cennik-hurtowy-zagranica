@@ -6,54 +6,51 @@ import {userProductsFilter} from "@/services/userProductsFilter";
 
 const getChangedPrices = (client) => {
     return new Promise(async (resolve, reject) => {
-        const data = await prisma.product.findMany({
+        const test = await prisma.product.findMany({
             where: {}, include: {
-                names: true,
-                prices: true
+                names: {
+                    where: {
+                        lang: client.iso,
+                    },
+                },
+                prices: {
+                    where: {
+                        lang: client.iso,
+                        NOT: {
+                            OR: [
+                                {
+                                    newPrice: 0,
+                                },
+                                {
+                                    oldPrice: 0,
+                                },
+                            ],
+                        },
+                    },
+                },
             }
         })
-        const products = userProductsFilter(data, client, client.iso)
-        // const products = data.map((product) => {
-        //     const {id, sku, ean, names, prices} = product;
-        //     const pricesIndex = prices.findIndex(price => price.lang === client.lang)
-        //     const namesIndex = names.findIndex(name => name.lang === client.lang)
-        //     return {
-        //         id: id.toString(),
-        //         sku,
-        //         ean,
-        //         title: names[namesIndex].name,
-        //         currency: prices[pricesIndex].currency,
-        //         newPrice: prices[pricesIndex].newPrice,
-        //         oldPrice: prices[pricesIndex].oldPrice,
-        //         difference: prices[pricesIndex].oldPrice - prices[pricesIndex].newPrice,
-        //
-        //     };
-        // });
-
-        const productsWithDifferences = products.filter(
-            (product) => product.price.difference !== 0
-        );
-        console.log(productsWithDifferences)
-
-        if (productsWithDifferences.length === 0) {
-            reject('No products to send')
+        const products = await userProductsFilter(client.id, client.iso, "", true)
+        // console.dir(test[0], {depth: null})
+        if (products.length === 0) {
+            reject(`No products to send to ${client.name} - ${client.email} - ${client.iso}`)
         } else {
-            resolve({productsWithDifferences, client})
+            resolve({products, client})
         }
     })
 }
 
-const sendNotification = ({productsWithDifferences, clients}) => {
+const sendNotification = ({products, client}) => {
     return new Promise(async (resolve) => {
-        for (const client of clients.emails) {
-            const html = await render(<EmailTemplate data={...productsWithDifferences} locale={clients.locale}
-                                                     name={clients.name} currency={clients.currency}/>)
-            await sendEmail({
-                to: client, subject: `${clients.subject} ${clients.name}`, html: `${html}`
-            })
-            console.log(`Wysłano powiadomienie do - ${clients.lang} - ${client}`)
-        }
-        resolve(productsWithDifferences)
+
+        const html = await render(<EmailTemplate data={...products} locale={client.locale}
+                                                 name={client.name} currency={client.currency}/>)
+        await sendEmail({
+            to: client.email, subject: `${client.subject} ${client.name}`, html: `${html}`
+        })
+        console.log(`Wysłano powiadomienie do - ${client.iso} - ${client.email}`)
+
+        resolve(products)
     })
 }
 
@@ -61,22 +58,36 @@ export const notifyClient = async () => {
     const users = await prisma.user.findMany({
         include: {
             country: true,
-            userProducts: true,
+            userProducts: {
+                include: {
+                    country: true
+                }
+            },
         }
     })
     const clients = []
     users.forEach(user => {
-        const {email, sendNotification, userProducts} = user
+        const {id, email, sendNotification, userProducts} = user
+        if (!sendNotification) return
         const countries = user.country;
         countries.forEach(country => {
             const {iso, name, currency, locale, subject} = country
-            clients.push({
-                email, sendNotification, userProducts, iso, name, currency, locale, subject
+
+            userProducts.forEach(userProduct => {
+                if (userProduct.country[0].id === country.id)
+                    clients.push({
+                        id, email, sendNotification, userProducts: [userProduct], iso, name, currency, locale, subject
+                    })
             })
         })
 
     })
+    for await (const client of clients) {
 
-    clients.forEach(async (client) => await getChangedPrices(client).then(data => sendNotification(data)).catch(error => console.log(error)))
+        await getChangedPrices(client).then(async (data) => {
+                await sendNotification(data)
+            }
+        ).catch(error => console.log(error))
+    }
 
 }

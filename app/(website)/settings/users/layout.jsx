@@ -34,6 +34,7 @@ const SettingsUsersLayout = ({ children }) => {
   if (session.status === "loading") {
     return <LoadingState size="md" />;
   }
+  if (session.status === "unauthenticated") return redirect("/login");
   if (session.data.user.role !== "admin") return redirect("/");
   return (
     <main className="h-screen grid grid-rows-[36px_1fr] p-10 min-w-[768px] gap-10">

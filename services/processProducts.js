@@ -112,22 +112,23 @@ export const processPrices = async (data) => {
             },
           });
           if (existingPrice) {
-            return prisma.productPrice.update({
-              where: {
-                id: existingPrice.id,
-              },
-              data: {
-                lang: lang,
-                currency: currency,
-                oldPrice: existingPrice.newPrice,
-                newPrice: price,
-                product: {
-                  connect: {
-                    uid,
+            if (existingPrice.newPrice !== price)
+              return prisma.productPrice.update({
+                where: {
+                  id: existingPrice.id,
+                },
+                data: {
+                  lang: lang,
+                  currency: currency,
+                  oldPrice: existingPrice.newPrice,
+                  newPrice: price,
+                  product: {
+                    connect: {
+                      uid,
+                    },
                   },
                 },
-              },
-            });
+              });
           } else {
             return prisma.productPrice.create({
               data: {

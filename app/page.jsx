@@ -9,18 +9,24 @@ import { Button } from "@/components/ui/button";
 import { CarbonSettings } from "@/components/Layout/Icones";
 import { useMemo } from "react";
 import useGetUsers from "@/hooks/useGetUsers";
+import { redirect } from "next/navigation";
 
 const BasePage = () => {
   const session = useSession();
   const { data, isLoading } = useGetUsers();
+
   const user = useMemo(() => {
-    if (!isLoading)
-      return data.filter((user) => user.id === session.data.user.id)[0];
+    if (!isLoading) {
+      if (session.status === "authenticated")
+        return data.filter((user) => user.id === session.data.user.id)[0];
+      return {};
+    }
     return {};
   }, [data, isLoading]);
   if (session.status === "loading") {
     return <LoadingState />;
   }
+  if (session.status === "unauthenticated") return redirect("/login");
   return (
     <main className="h-screen flex flex-col justify-center items-center min-w-[768px] p-10">
       <NavigationBar
@@ -54,7 +60,7 @@ const BasePage = () => {
         </Link>
       </div>
       <div className="flex w-full justify-end items-center">
-        {session.data.user.role === "admin" ? (
+        {user.role === "admin" ? (
           <Button size="icon" asChild>
             <Link href="/settings">
               <CarbonSettings className="h-5 w-5" />

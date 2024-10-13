@@ -15,9 +15,11 @@ const LangPage = ({ params }) => {
   const countries = useGetCountries();
 
   const user = useMemo(() => {
-    if (!isLoading && session.status !== "loading")
-      return data.filter((user) => user.id === session.data.user.id)[0];
-    return {};
+    if (!isLoading) {
+      if (session.status === "authenticated")
+        return data.filter((user) => user.id === session.data.user.id)[0];
+      return {};
+    }
   }, [data, isLoading, session.status]);
 
   const currentCountry = useMemo(() => {
@@ -35,8 +37,9 @@ const LangPage = ({ params }) => {
   if (isLoading) {
     return <LoadingState />;
   }
+  if (session.status === "unauthenticated") return redirect("/login");
 
-  const isUserAllowed = user.country.some((country) => country.iso === lang);
+  const isUserAllowed = user?.country.some((country) => country.iso === lang);
 
   if (!isUserAllowed) return redirect(`/${alias}`);
 

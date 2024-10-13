@@ -10,6 +10,7 @@ import LoadingState from "@/app/loading";
 import NotFound from "@/app/not-found";
 import { useMemo } from "react";
 import useGetUsers from "@/hooks/useGetUsers";
+import { redirect } from "next/navigation";
 
 const AliasPage = ({ params }) => {
   const { alias } = params;
@@ -17,14 +18,18 @@ const AliasPage = ({ params }) => {
   const session = useSession();
   const { data, isLoading } = useGetUsers();
   const user = useMemo(() => {
-    if (!isLoading && session.status !== "loading")
-      return data.filter((user) => user.id === session.data.user.id)[0];
+    if (!isLoading) {
+      if (session.status === "authenticated")
+        return data.filter((user) => user.id === session.data.user.id)[0];
+      return {};
+    }
     return {};
   }, [data, isLoading, session.status]);
-  if (!aliases.some((al) => al === alias)) return NotFound();
+  if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
     return <LoadingState size="md" />;
   }
+  if (session.status === "unauthenticated") return redirect("/login");
   return (
     <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
@@ -41,10 +46,10 @@ const AliasPage = ({ params }) => {
         />
       </div>
       <div>
-        <CountriesList user={session.data.user} alias={alias} />
+        <CountriesList user={user} alias={alias} />
       </div>
       <div className="flex justify-end items-center">
-        {user?.role === "admin" ? (
+        {user.role === "admin" ? (
           <Button size="icon" asChild>
             <Link href="/settings">
               <CarbonSettings className="h-5 w-5" />
