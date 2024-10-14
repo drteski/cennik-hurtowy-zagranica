@@ -20,11 +20,12 @@ const AliasPage = ({ params }) => {
   const user = useMemo(() => {
     if (!isLoading) {
       if (session.status === "authenticated")
-        return data.filter((user) => user.id === session.data.user.id)[0];
+        if (typeof session.data.user !== "undefined")
+          return data.filter((user) => user.id === session.data?.user.id)[0];
       return {};
     }
     return {};
-  }, [data, isLoading, session.status, session.data.user.id]);
+  }, [data, isLoading, session.status, session.data?.user.id]);
   if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
     return <LoadingState size="md" />;

@@ -6,32 +6,8 @@ import {userProductsFilter} from "@/services/userProductsFilter";
 
 const getChangedPrices = (client) => {
     return new Promise(async (resolve, reject) => {
-        const test = await prisma.product.findMany({
-            where: {}, include: {
-                names: {
-                    where: {
-                        lang: client.iso,
-                    },
-                },
-                prices: {
-                    where: {
-                        lang: client.iso,
-                        NOT: {
-                            OR: [
-                                {
-                                    newPrice: 0,
-                                },
-                                {
-                                    oldPrice: 0,
-                                },
-                            ],
-                        },
-                    },
-                },
-            }
-        })
         const products = await userProductsFilter(client.id, client.iso, "", true)
-        // console.dir(test[0], {depth: null})
+
         if (products.length === 0) {
             reject(`No products to send to ${client.name} - ${client.email} - ${client.iso}`)
         } else {
