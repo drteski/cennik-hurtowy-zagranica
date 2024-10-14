@@ -32,9 +32,5 @@ export async function GET() {
     );
   }
 
-  // await prisma.product.deleteMany();
-  // await prisma.productName.deleteMany();
-  // await prisma.productPrice.deleteMany();
-
   return NextResponse.json({ message: "Zaktualizowano produkty." });
 }

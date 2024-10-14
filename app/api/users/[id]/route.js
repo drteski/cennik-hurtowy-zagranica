@@ -192,9 +192,9 @@ export const POST = async (request, { params }) => {
             data: {
               ids: [],
               variantIds: [],
-              skus: [""],
-              eans: [""],
-              names: [""],
+              skus: [],
+              eans: [],
+              names: [],
               country: {
                 connect: {
                   id: country,
