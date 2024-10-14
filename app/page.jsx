@@ -22,7 +22,7 @@ const BasePage = () => {
       return {};
     }
     return {};
-  }, [data, isLoading]);
+  }, [data, isLoading, session.data.user.id, session.status]);
   if (session.status === "loading") {
     return <LoadingState />;
   }

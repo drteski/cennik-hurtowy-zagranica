@@ -20,13 +20,13 @@ const LangPage = ({ params }) => {
         return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
-  }, [data, isLoading, session.status]);
+  }, [data, isLoading, session.status, session.data.user.id]);
 
   const currentCountry = useMemo(() => {
     if (!countries.isLoading)
       return countries.data.filter((country) => country.iso === lang)[0];
     return {};
-  }, [countries.data, countries.isLoading]);
+  }, [countries.data, countries.isLoading, lang]);
 
   if (session.status === "loading") {
     return <LoadingState />;
