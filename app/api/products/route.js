@@ -25,6 +25,7 @@ export async function GET(request) {
         new Date(checkUpdated.updatedAt),
       );
   if (hours >= 20) {
+    NextResponse.json({ message: "Zaktualizowano produkty." });
     await downloadProductsData();
     const files = fs.readdirSync(dataPath);
     const productsFiles = files.filter((file) => file.match(/product-\d*/g));
@@ -36,15 +37,15 @@ export async function GET(request) {
     }
     for await (const file of productsFiles) {
       await processFile(file).then(
-        async (data) => await processPrices(convertProducts(data), force),
+        async (data) => await processPrices(convertProducts(data)),
       );
     }
     for await (const file of productsFiles) {
       await processFile(file).then(
-        async (data) => await processTitles(convertProducts(data), force),
+        async (data) => await processTitles(convertProducts(data)),
       );
     }
-    return NextResponse.json({ message: "Zaktualizowano produkty." });
+    return;
   }
 
   return NextResponse.json({ message: "Pominięto." });

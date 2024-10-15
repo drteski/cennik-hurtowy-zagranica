@@ -88,7 +88,7 @@ export const processProducts = async (data) => {
     resolve();
   });
 };
-export const processPrices = async (data, force = false) => {
+export const processPrices = async (data) => {
   return new Promise(async (resolve) => {
     const pricesToSave = [];
     data.forEach((product) => {
@@ -105,7 +105,7 @@ export const processPrices = async (data, force = false) => {
 
     await Promise.all(
       pricesToSave
-        .map(async (prices, index) => {
+        .map(async (prices) => {
           const { uid, lang, currency, price } = prices;
           const existingPrice = await prisma.productPrice.findFirst({
             where: {
@@ -154,7 +154,7 @@ export const processPrices = async (data, force = false) => {
     resolve();
   });
 };
-export const processTitles = async (data, force = false) => {
+export const processTitles = async (data) => {
   return new Promise(async (resolve) => {
     const titlesToSave = [];
     data.forEach((product) => {
