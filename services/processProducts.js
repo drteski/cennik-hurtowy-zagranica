@@ -1,6 +1,7 @@
 import { mapBrands, mapPrices, mapTitles } from "@/lib/processJson";
 import prisma from "@/db";
 import { config } from "@/config/config";
+import { differenceInHours } from "date-fns";
 
 export const convertProducts = (data) => {
   return data
@@ -87,7 +88,7 @@ export const processProducts = async (data) => {
     resolve();
   });
 };
-export const processPrices = async (data) => {
+export const processPrices = async (data, force = false) => {
   return new Promise(async (resolve) => {
     const pricesToSave = [];
     data.forEach((product) => {
@@ -101,9 +102,10 @@ export const processPrices = async (data) => {
         })),
       );
     });
+
     await Promise.all(
       pricesToSave
-        .map(async (prices) => {
+        .map(async (prices, index) => {
           const { uid, lang, currency, price } = prices;
           const existingPrice = await prisma.productPrice.findFirst({
             where: {
@@ -111,6 +113,7 @@ export const processPrices = async (data) => {
               productId: uid,
             },
           });
+
           if (existingPrice) {
             if (existingPrice.newPrice !== price)
               return prisma.productPrice.update({
@@ -147,10 +150,11 @@ export const processPrices = async (data) => {
         })
         .filter(Boolean),
     );
+
     resolve();
   });
 };
-export const processTitles = async (data) => {
+export const processTitles = async (data, force = false) => {
   return new Promise(async (resolve) => {
     const titlesToSave = [];
     data.forEach((product) => {
@@ -163,6 +167,7 @@ export const processTitles = async (data) => {
         })),
       );
     });
+
     await Promise.all(
       titlesToSave
         .map(async (title) => {
@@ -206,6 +211,7 @@ export const processTitles = async (data) => {
         })
         .filter(Boolean),
     );
+
     resolve();
   });
 };

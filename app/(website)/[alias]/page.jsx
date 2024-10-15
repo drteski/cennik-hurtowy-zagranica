@@ -19,9 +19,9 @@ const AliasPage = ({ params }) => {
   const { data, isLoading } = useGetUsers();
   const user = useMemo(() => {
     if (!isLoading) {
-      if (session.status === "authenticated")
-        if (typeof session.data.user !== "undefined")
-          return data.filter((user) => user.id === session.data?.user.id)[0];
+      if (session.status === "authenticated") console.log(session.data.user);
+      if (typeof session.data.user !== "undefined")
+        return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
     return {};

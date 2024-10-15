@@ -42,6 +42,8 @@ model Country {
   subject      String
   userProducts UserProducts[]
   users        User[]
+  priceHistory PriceHistory[]
+  priceChanges PriceChanges[]
 }
 
 model Product {
@@ -56,22 +58,46 @@ model Product {
   brand         String
   names         ProductName[]
   prices        ProductPrice[]
+  priceHistory  PriceHistory[]
+  updatedAt     DateTime       @default(now()) @updatedAt
 }
 
 model ProductName {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   lang      String
   name      String
-  product   Product @relation(fields: [productId], references: [uid], onUpdate: Cascade, onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [uid], onUpdate: Cascade, onDelete: Cascade)
   productId Int
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model ProductPrice {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   lang      String
   currency  String
-  oldPrice  Float   @default(0)
-  newPrice  Float   @default(0)
-  product   Product @relation(fields: [productId], references: [uid], onUpdate: Cascade, onDelete: Cascade)
+  oldPrice  Float    @default(0)
+  newPrice  Float    @default(0)
+  product   Product  @relation(fields: [productId], references: [uid], onUpdate: Cascade, onDelete: Cascade)
   productId Int
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model PriceHistory {
+  id        Int      @id @default(autoincrement())
+  newPrice  Float
+  oldPrice  Float
+  country   Country  @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  countryId Int
+  product   Product  @relation(fields: [productId], references: [uid], onUpdate: Cascade, onDelete: Cascade)
+  productId Int
+  createdAt DateTime @default(now())
+}
+
+model PriceChanges {
+  id         Int      @id @default(autoincrement())
+  pricesUp   Int
+  pricesDown Int
+  country    Country  @relation(fields: [countryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  countryId  Int
+  createdAt  DateTime @default(now())
 }

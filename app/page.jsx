@@ -18,7 +18,7 @@ const BasePage = () => {
   const user = useMemo(() => {
     if (!isLoading) {
       if (session.status === "authenticated")
-        return data.filter((user) => user.id === session.data?.user.id)[0];
+        return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
     return {};
