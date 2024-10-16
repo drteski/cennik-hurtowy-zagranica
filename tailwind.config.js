@@ -42,6 +42,7 @@ module.exports = {
         rea: "#4968a9",
         tutumi: "#57B29B",
         toolight: "#dfbc03",
+        podlasiak: "#039341",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

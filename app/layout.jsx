@@ -1,9 +1,9 @@
 import "./globals.css";
-import { IBM_Plex_Sans } from "next/font/google";
+import { Lato } from "next/font/google";
 import { Providers } from "@/components/Layout/Providers";
 
-const inter = IBM_Plex_Sans({
-  weight: ["100", "300", "400", "500", "700"],
+const inter = Lato({
+  weight: ["100", "300", "400", "700", "900"],
   subsets: ["latin-ext"],
 });
 

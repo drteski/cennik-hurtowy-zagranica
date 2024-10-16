@@ -3,18 +3,8 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import useGetUser from "@/hooks/useGetUser";
-import { useEffect, useState } from "react";
 
-export const CountriesList = ({ user, alias }) => {
-  const [countries, setCountries] = useState([]);
-  const { isLoading, data } = useGetUser(user?.id);
-  useEffect(() => {
-    if (!isLoading) {
-      if (typeof data.country !== "undefined")
-        return setCountries(data.country);
-    }
-  }, [data, isLoading]);
+export const CountriesList = ({ isLoading, countries, alias }) => {
   return (
     <div className="grid grid-cols-4 gap-4 m-auto max-w-[768px] justify-center items-center p-10">
       {isLoading ? (

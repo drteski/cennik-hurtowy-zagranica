@@ -19,8 +19,7 @@ const AliasPage = ({ params }) => {
   const { data, isLoading } = useGetUsers();
   const user = useMemo(() => {
     if (!isLoading) {
-      if (session.status === "authenticated") console.log(session.data.user);
-      if (typeof session.data.user !== "undefined")
+      if (session.data !== undefined)
         return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
@@ -28,6 +27,9 @@ const AliasPage = ({ params }) => {
   }, [data, isLoading, session.status, session.data?.user.id]);
   if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
+    return <LoadingState size="md" />;
+  }
+  if (session.data === undefined) {
     return <LoadingState size="md" />;
   }
   if (session.status === "unauthenticated") return redirect("/login");
@@ -47,7 +49,11 @@ const AliasPage = ({ params }) => {
         />
       </div>
       <div>
-        <CountriesList user={user} alias={alias} />
+        <CountriesList
+          isLoading={isLoading}
+          countries={user.country}
+          alias={alias}
+        />
       </div>
       <div className="flex justify-end items-center">
         {user.role === "admin" ? (

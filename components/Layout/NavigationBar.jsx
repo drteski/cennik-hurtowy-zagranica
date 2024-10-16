@@ -1,7 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CarbonChevronLeft, CarbonLogout } from "@/components/Layout/Icones";
+import {
+  CarbonChevronLeft,
+  CarbonLogout,
+  PodlasiakLogo,
+} from "@/components/Layout/Icones";
 import { signOut } from "next-auth/react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,10 +21,13 @@ export const NavigationBar = ({
 }) => {
   return (
     <div
-      className={`w-full gap-4 grid ${backPath !== "" && showCountry && showUser && showLogout ? "grid-cols-[36px_1fr_256px_36px]" : !showCountry && showUser && showLogout && backPath !== "" ? "grid-cols-[36px_1fr_36px]" : "grid-cols-[1fr_36px]"} items-center`}
+      className={`w-full gap-4 grid ${backPath !== "" && showCountry && showUser && showLogout ? "grid-cols-[auto_auto_1fr_256px_36px]" : !showCountry && showUser && showLogout && backPath !== "" ? "grid-cols-[auto_auto_1fr_36px]" : "grid-cols-[auto_1fr_36px]"} items-center`}
     >
+      <Link href="/">
+        <PodlasiakLogo className="fill-podlasiak h-9" />
+      </Link>
       {backPath !== "" && (
-        <Button size="icon" asChild>
+        <Button className="ml-20" size="icon" asChild>
           <Link href={backPath}>
             <CarbonChevronLeft className="h-5 w-5" />
           </Link>

@@ -16,7 +16,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { HeaderMain } from "@/components/Layout/HeaderMain";
+import { PodlasiakLogo } from "@/components/Layout/Icones";
 
 const formSchema = z.object({
   email: z.string(),
@@ -53,10 +53,7 @@ const LoginPage = () => {
   return (
     <div className="flex h-full items-center justify-center min-w-[768px]">
       <div className="flex flex-col relative items-center gap-10 justify-center h-2/3 w-full px-20">
-        <HeaderMain
-          text="Podlasiak Prices"
-          className="text-center text-gray-100 mb-10"
-        />
+        <PodlasiakLogo className="fill-gray-100 h-36 mb-28" />
         <Form {...form}>
           <form
             className="flex flex-col justify-center"
