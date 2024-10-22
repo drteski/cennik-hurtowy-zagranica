@@ -165,6 +165,7 @@ export const UsersEdit = ({ id }) => {
                       <Input
                         ref={nameRef}
                         className="bg-white"
+                        autoComplete="off"
                         defaultValue={data.name}
                       />
                     </div>
@@ -177,6 +178,7 @@ export const UsersEdit = ({ id }) => {
                       <Input
                         ref={emailRef}
                         className="bg-white"
+                        autoComplete="off"
                         defaultValue={data.email}
                       />
                     </div>

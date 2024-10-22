@@ -1,9 +1,9 @@
 import "./globals.css";
-import { Lato } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Providers } from "@/components/Layout/Providers";
 
-const inter = Lato({
-  weight: ["100", "300", "400", "700", "900"],
+const inter = Inter({
+  weight: ["300", "400", "700", "900"],
   subsets: ["latin-ext"],
 });
 

@@ -17,10 +17,11 @@ const LangPage = ({ params }) => {
   const user = useMemo(() => {
     if (!isLoading) {
       if (session.status === "authenticated")
-        return data.filter((user) => user.id === session.data.user.id)[0];
+        if (session.data !== undefined)
+          return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
-  }, [data, isLoading, session.status, session.data?.user.id]);
+  }, [data, isLoading, session.status, session.data, session.data?.user.id]);
 
   const currentCountry = useMemo(() => {
     if (!countries.isLoading)
@@ -29,13 +30,17 @@ const LangPage = ({ params }) => {
   }, [countries.data, countries.isLoading, lang]);
 
   if (session.status === "loading") {
-    return <LoadingState />;
+    return <LoadingState size="md" />;
   }
   if (countries.isLoading) {
-    return <LoadingState />;
+    return <LoadingState size="md" />;
   }
+
   if (isLoading) {
-    return <LoadingState />;
+    return <LoadingState size="md" />;
+  }
+  if (session.data === undefined) {
+    return <LoadingState size="md" />;
   }
   if (session.status === "unauthenticated") return redirect("/login");
 
@@ -44,7 +49,7 @@ const LangPage = ({ params }) => {
   if (!isUserAllowed) return redirect(`/${alias}`);
 
   return (
-    <main className="flex flex-col min-w-[768px]">
+    <main className="flex flex-col min-w-[768px] bg-neutral-100">
       <div className="p-10 flex justify-between items-center">
         <NavigationBar
           user={user}

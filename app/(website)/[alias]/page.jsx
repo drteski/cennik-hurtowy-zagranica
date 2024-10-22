@@ -34,7 +34,7 @@ const AliasPage = ({ params }) => {
   }
   if (session.status === "unauthenticated") return redirect("/login");
   return (
-    <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px]">
+    <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px] bg-neutral-100">
       <NavigationBar
         user={user}
         loadingState={isLoading}

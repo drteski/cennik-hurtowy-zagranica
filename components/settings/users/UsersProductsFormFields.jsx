@@ -179,16 +179,20 @@ export const UsersProductsFormFields = ({
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 items-center">
-              <Checkbox id="activeProduct" disabled />
-              <Label htmlFor="activeProduct">Only with SKU</Label>
+              <Checkbox id={`onlyWithSku-${country.id}`} disabled />
+              <Label htmlFor={`onlyWithSku-${country.id}`}>Only with SKU</Label>
             </div>
             <div className="flex gap-2 items-center">
-              <Checkbox id="activeProduct" disabled />
-              <Label htmlFor="activeProduct">Active Products</Label>
+              <Checkbox id={`activeProduct-${country.id}`} disabled />
+              <Label htmlFor={`activeProduct-${country.id}`}>
+                Active Products
+              </Label>
             </div>
             <div className="flex gap-2 items-center">
-              <Checkbox id="activeVariant" disabled />
-              <Label htmlFor="activeVariant">Active Variants</Label>
+              <Checkbox id={`activeVariant-${country.id}`} disabled />
+              <Label htmlFor={`activeVariant-${country.id}`}>
+                Active Variants
+              </Label>
             </div>
           </div>
         </div>

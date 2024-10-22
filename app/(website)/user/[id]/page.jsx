@@ -93,7 +93,12 @@ const UserPage = ({ params }) => {
           ) : (
             <>
               <Label className="mt-8">Name</Label>
-              <Input ref={nameRef} defaultValue={data.name} type="text" />
+              <Input
+                ref={nameRef}
+                defaultValue={data.name}
+                type="text"
+                autoComplete="off"
+              />
             </>
           )}
 
@@ -105,7 +110,7 @@ const UserPage = ({ params }) => {
               <Input
                 ref={emailRef}
                 defaultValue={data.email}
-                autoComplete="email"
+                autoComplete="off"
                 type="email"
               />
             </>
@@ -116,7 +121,7 @@ const UserPage = ({ params }) => {
           ) : (
             <>
               <Label className="mt-8">Password</Label>
-              <Input ref={passwordRef} type="password" />
+              <Input ref={passwordRef} type="password" autoComplete="off" />
             </>
           )}
           {isLoading ? (

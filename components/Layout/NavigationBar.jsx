@@ -23,11 +23,11 @@ export const NavigationBar = ({
     <div
       className={`w-full gap-4 grid ${backPath !== "" && showCountry && showUser && showLogout ? "grid-cols-[auto_auto_1fr_256px_36px]" : !showCountry && showUser && showLogout && backPath !== "" ? "grid-cols-[auto_auto_1fr_36px]" : "grid-cols-[auto_1fr_36px]"} items-center`}
     >
-      <Link href="/">
-        <PodlasiakLogo className="fill-podlasiak h-9" />
+      <Link className="relative w-[190px]" href="/">
+        <PodlasiakLogo className="fill-podlasiak h-14 absolute -top-7 left-0" />
       </Link>
       {backPath !== "" && (
-        <Button className="ml-20" size="icon" asChild>
+        <Button className="ml-20 bg-neutral-950" size="icon" asChild>
           <Link href={backPath}>
             <CarbonChevronLeft className="h-5 w-5" />
           </Link>
@@ -39,7 +39,7 @@ export const NavigationBar = ({
           {loadingState ? (
             <Skeleton className="justify-self-end h-9 w-64" />
           ) : (
-            <Button className="justify-self-end" asChild>
+            <Button className="justify-self-end bg-neutral-950" asChild>
               <Link className="uppercase" href={`/user/${user?.id}`}>
                 {user?.name}
               </Link>
@@ -50,7 +50,7 @@ export const NavigationBar = ({
       {showLogout && (
         <Button
           size="icon"
-          className="justify-self-end"
+          className="justify-self-end bg-neutral-950"
           onClick={() => signOut()}
         >
           <CarbonLogout />
