@@ -1,12 +1,10 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const CountriesList = ({ isLoading, countries, alias }) => {
   return (
-    <div className="grid grid-cols-4 gap-4 m-auto max-w-[768px] justify-center items-center p-10">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5 items-start overflow-hidden">
       {isLoading ? (
         <>
           {Array.from(Array(26).keys()).map((key) => (
@@ -22,14 +20,13 @@ export const CountriesList = ({ isLoading, countries, alias }) => {
           ) : (
             <>
               {countries.map((country) => (
-                <Button key={country.iso} asChild>
-                  <Link
-                    href={`/${alias.toLowerCase()}/${country.iso}`}
-                    className="font-normal text-[14px]"
-                  >
-                    {country.name}
-                  </Link>
-                </Button>
+                <Link
+                  key={country.iso}
+                  href={`/${alias.toLowerCase()}/${country.iso}`}
+                  className="font-medium text-normal text-center uppercase bg-neutral-900 text-white rounded-xl p-8 transition hover:bg-neutral-700"
+                >
+                  {country.name}
+                </Link>
               ))}
             </>
           )}

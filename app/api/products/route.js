@@ -8,7 +8,11 @@ export async function GET(request) {
   const force = searchParams.get("force") === "true";
 
   const checkUpdated = await prisma.product.findFirst();
-  const today = force ? true : !isToday(new Date(checkUpdated.updatedAt));
+  const today = force
+    ? true
+    : checkUpdated
+      ? !isToday(new Date(checkUpdated.updatedAt))
+      : true;
   if (today) {
     saveProductsToDB();
     return NextResponse.json({ message: "Zakolejkowano aktualizację" });

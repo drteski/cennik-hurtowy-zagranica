@@ -1,5 +1,21 @@
 import { NextResponse } from "next/server";
+import { endOfDay, startOfDay } from "date-fns";
+import { getLastDaysDate } from "@/lib/processJson";
 
 export async function GET() {
-  return NextResponse.json({ message: "Zaktualizowano produkty." });
+  const priceChanges = await prisma.priceChanges.findMany({
+    where: {
+      createdAt: {
+        lte: endOfDay(new Date()),
+        gte: startOfDay(getLastDaysDate(10)),
+      },
+    },
+    include: {
+      country: true,
+    },
+  });
+
+  return new NextResponse(JSON.stringify({ priceChanges }), {
+    status: 200,
+  });
 }

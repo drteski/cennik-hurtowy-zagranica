@@ -136,7 +136,7 @@ export const useTableColumns = (country) => {
                 props.column.toggleSorting(props.column.getIsSorted() === "asc")
               }
             >
-              <span className="block text-xs">Price</span>
+              <span className="block text-xs">PRICE</span>
               <CaretSortIcon className="ml-1 h-4 w-4" />
             </Button>
           </div>
@@ -149,7 +149,7 @@ export const useTableColumns = (country) => {
           }).format(newPrice);
           if (difference === 0) {
             return (
-              <span className="font-medium text-[16px] flex justify-end items-center gap-2">
+              <span className="font-medium text-[15px] flex justify-end items-center gap-2">
                 {price}
                 <CarbonSubtract className="h-3 w-3" />
               </span>
@@ -157,7 +157,7 @@ export const useTableColumns = (country) => {
           }
           if (difference > 0) {
             return (
-              <span className="price-down font-medium text-[16px] flex justify-end items-center gap-2">
+              <span className="price-down font-medium text-[15px] flex justify-end items-center gap-2">
                 {price}
                 <CarbonTriangleDownSolid className="h-3 w-3" />
               </span>
@@ -165,7 +165,7 @@ export const useTableColumns = (country) => {
           }
           if (difference < 0) {
             return (
-              <span className="price-up font-medium text-[16px] flex justify-end items-center gap-2">
+              <span className="price-up font-medium text-[15px] flex justify-end items-center gap-2">
                 {price}
                 <CarbonTriangleSolid className="h-3 w-3" />
               </span>

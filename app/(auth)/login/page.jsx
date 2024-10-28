@@ -99,7 +99,7 @@ const LoginPage = () => {
           </form>
         </Form>
         {tooltip !== "" && (
-          <span className="absolute bottom-44 text-sm text-red-400 block">
+          <span className="absolute bottom-20 text-sm text-red-400 block">
             {tooltip}
           </span>
         )}

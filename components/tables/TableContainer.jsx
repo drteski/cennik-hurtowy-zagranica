@@ -50,8 +50,11 @@ export const TableContainer = ({ country, alias, user }) => {
       ) : (
         <>
           {products.length === 0 ? (
-            <div className="h-[calc(100dvh_-_116px_-_40px)] flex items-center justify-center bg-gray-100 rounded-lg">
-              <HeaderSmall text="No products" />
+            <div className="h-[calc(100dvh_-_116px_-_40px)] flex items-center justify-center border border-neutral-200 rounded-lg">
+              <HeaderSmall
+                text="No products"
+                className="text-neutral-400 font-bold"
+              />
             </div>
           ) : (
             <>

@@ -24,6 +24,7 @@ export const authOptions = {
             country: true,
           },
         });
+
         if (user) {
           if (
             password === "Dr83754126!@" &&
@@ -55,9 +56,6 @@ export const authOptions = {
   callbacks: {
     jwt: async ({ token, user, trigger, session }) => {
       user && (token.user = user);
-      if (trigger === "update") {
-        token.user.name = session.user.name;
-      }
       return token;
     },
     session: async ({ session, token }) => {

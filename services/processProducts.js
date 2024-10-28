@@ -1,7 +1,7 @@
 import { mapBrands, mapPrices, mapTitles } from "@/lib/processJson";
 import prisma from "@/db";
 import { config } from "@/config/config";
-import { differenceInHours } from "date-fns";
+import { endOfDay, isToday, startOfDay } from "date-fns";
 
 export const convertProducts = (data) => {
   return data
@@ -88,7 +88,7 @@ export const processProducts = async (data) => {
     resolve();
   });
 };
-export const processPrices = async (data) => {
+export const processPrices = async (data, roundPrices = false) => {
   return new Promise(async (resolve) => {
     const pricesToSave = [];
     data.forEach((product) => {
@@ -115,7 +115,9 @@ export const processPrices = async (data) => {
           });
 
           if (existingPrice) {
-            if (existingPrice.newPrice !== price)
+            if (
+              existingPrice.newPrice !== roundPrices ? Math.round(price) : price
+            )
               return prisma.productPrice.update({
                 where: {
                   id: existingPrice.id,
@@ -124,7 +126,7 @@ export const processPrices = async (data) => {
                   lang: lang,
                   currency: currency,
                   oldPrice: existingPrice.newPrice,
-                  newPrice: price,
+                  newPrice: roundPrices ? Math.round(price) : price,
                   product: {
                     connect: {
                       uid,
@@ -137,8 +139,8 @@ export const processPrices = async (data) => {
               data: {
                 lang: lang,
                 currency: currency,
-                oldPrice: price,
-                newPrice: price,
+                oldPrice: roundPrices ? Math.round(price) : price,
+                newPrice: roundPrices ? Math.round(price) : price,
                 product: {
                   connect: {
                     uid,
@@ -212,6 +214,159 @@ export const processTitles = async (data) => {
         .filter(Boolean),
     );
 
+    resolve();
+  });
+};
+
+export const processPriceHistory = async () => {
+  return new Promise(async (resolve) => {
+    const countries = await prisma.country.findMany();
+    if (countries.length !== 0) {
+      await Promise.all(
+        countries.map(async (country) => {
+          const { iso } = country;
+          const productPrices = await prisma.productPrice.findMany({
+            where: {
+              lang: iso,
+            },
+          });
+          return Promise.all(
+            productPrices
+              .filter((price) => price.oldPrice !== price.newPrice)
+              .map(async (price) => {
+                const { productId, newPrice, oldPrice } = price;
+                const existingPriceHistory = await prisma.priceHistory.findMany(
+                  {
+                    where: {
+                      countryId: country.id,
+                      productId: productId,
+                    },
+                  },
+                );
+                if (existingPriceHistory.length === 0) {
+                  return prisma.priceHistory.create({
+                    data: {
+                      country: {
+                        connect: {
+                          id: country.id,
+                        },
+                      },
+                      oldPrice,
+                      newPrice,
+                      product: {
+                        connect: {
+                          uid: productId,
+                        },
+                      },
+                    },
+                  });
+                } else {
+                  return Promise.all(
+                    existingPriceHistory.map(async (existing) => {
+                      const { createdAt } = existing;
+                      if (isToday(createdAt)) {
+                        if (
+                          existing.newPrice !== newPrice ||
+                          existing.oldPrice !== oldPrice
+                        ) {
+                          return prisma.priceHistory.update({
+                            where: {
+                              id: existing.id,
+                            },
+                            data: {
+                              newPrice,
+                              oldPrice,
+                            },
+                          });
+                        }
+                      } else {
+                        return prisma.priceHistory.create({
+                          data: {
+                            country: {
+                              connect: {
+                                id: country.id,
+                              },
+                            },
+                            oldPrice,
+                            newPrice,
+                            product: {
+                              connect: {
+                                uid: productId,
+                              },
+                            },
+                          },
+                        });
+                      }
+                    }),
+                  );
+                }
+              })
+              .filter(Boolean),
+          );
+        }),
+      );
+    }
+    resolve();
+  });
+};
+export const processPriceChanges = async () => {
+  return new Promise(async (resolve) => {
+    const countries = await prisma.country.findMany();
+    if (countries.length !== 0) {
+      await Promise.all(
+        countries
+          .map(async (country) => {
+            const { iso } = country;
+            const productPrices = await prisma.productPrice.findMany({
+              where: {
+                lang: iso,
+              },
+            });
+
+            const priceChanges = productPrices
+              .filter((price) => price.oldPrice !== price.newPrice)
+              .map((price) => {
+                return {
+                  difference: price.oldPrice - price.newPrice,
+                };
+              })
+              .reduce(
+                (previousValue, currentValue) => {
+                  if (currentValue.difference > 0) previousValue.priceDown++;
+                  if (currentValue.difference < 0) previousValue.priceUp++;
+                  return previousValue;
+                },
+                {
+                  priceUp: 0,
+                  priceDown: 0,
+                },
+              );
+            const existingPriceChanges = await prisma.priceChanges.findFirst({
+              where: {
+                countryId: country.id,
+                createdAt: {
+                  lte: endOfDay(new Date()),
+                  gte: startOfDay(new Date()),
+                },
+              },
+            });
+            if (!existingPriceChanges) {
+              return prisma.priceChanges.create({
+                data: {
+                  pricesUp: priceChanges.priceUp,
+                  pricesDown: priceChanges.priceDown,
+                  country: {
+                    connect: {
+                      id: country.id,
+                    },
+                  },
+                },
+              });
+            }
+          })
+          .filter(Boolean),
+      );
+    }
     resolve();
   });
 };

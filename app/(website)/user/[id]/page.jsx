@@ -77,11 +77,17 @@ const UserPage = ({ params }) => {
         />
       </div>
       <div className="grid grid-rows-[auto_auto_1fr] justify-center h-full  p-10">
-        <HeaderMain text="Profile edit" />
+        <HeaderMain
+          text="Profile edit"
+          className="text-neutral-900 font-bold"
+        />
         {isLoading ? (
           <Skeleton className="h-[40px] w-full my-20" />
         ) : (
-          <HeaderMedium text={data.name} className="py-20" />
+          <HeaderMedium
+            text={data.name}
+            className="py-20 text-neutral-700 font-bold text-2xl"
+          />
         )}
 
         <form
@@ -139,7 +145,7 @@ const UserPage = ({ params }) => {
             </div>
           )}
 
-          <Button>Save</Button>
+          <Button className="bg-neutral-900 hover:bg-neutral-800">Save</Button>
         </form>
       </div>
       {tooltip !== "" && (

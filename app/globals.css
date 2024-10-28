@@ -13,6 +13,7 @@ body {
 }
 
 @layer base {
+
     :root {
         --background: 0 0% 100%;
         --foreground: 224 71.4% 4.1%;
@@ -88,6 +89,7 @@ body {
         @apply rounded-md;
         background-color: #111827;
     }
+
     body {
         @apply bg-background text-foreground;
     }

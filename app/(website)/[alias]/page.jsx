@@ -34,7 +34,7 @@ const AliasPage = ({ params }) => {
   }
   if (session.status === "unauthenticated") return redirect("/login");
   return (
-    <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px] bg-neutral-100">
+    <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
         user={user}
         loadingState={isLoading}
@@ -42,13 +42,13 @@ const AliasPage = ({ params }) => {
         showUser
         showLogout
       />
-      <div className="p-10 flex h-[300px] items-center justify-center">
+      <div className="p-10 flex h-[300px] items-center justify-center border-neutral-200">
         <Logo
           className="w-96"
           alias={`${alias[0].toUpperCase()}${alias.slice(1, alias.length)}`}
         />
       </div>
-      <div>
+      <div className="p-10 overflow-y-scroll h-[calc(100dvh_-_300px_-_120px_-_36px_-_36px)] border border-gray-200 rounded-xl">
         <CountriesList
           isLoading={isLoading}
           countries={user.country}
@@ -57,8 +57,12 @@ const AliasPage = ({ params }) => {
       </div>
       <div className="flex justify-end items-center">
         {user.role === "admin" ? (
-          <Button size="icon" asChild>
-            <Link href="/settings">
+          <Button
+            size="icon"
+            asChild
+            className="bg-neutral-300 hover:bg-neutral-200 text-black"
+          >
+            <Link href="/settings" title="Logout">
               <CarbonSettings className="h-5 w-5" />
             </Link>
           </Button>

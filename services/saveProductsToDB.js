@@ -1,12 +1,15 @@
 import { downloadProductsData } from "@/services/downloadProductsData";
 import fs from "fs";
-import { processFile } from "@/lib/processJson";
+import { getLastDaysDate, processFile } from "@/lib/processJson";
 import {
   convertProducts,
+  processPriceChanges,
+  processPriceHistory,
   processPrices,
   processProducts,
   processTitles,
 } from "@/services/processProducts";
+import prisma from "@/db";
 
 const dataPath = `${process.cwd().replace(/\\\\/g, "/")}/public/temp/data/`;
 export const saveProductsToDB = async () => {
@@ -21,7 +24,7 @@ export const saveProductsToDB = async () => {
   }
   for await (const file of productsFiles) {
     await processFile(file).then(
-      async (data) => await processPrices(convertProducts(data)),
+      async (data) => await processPrices(convertProducts(data), true),
     );
   }
   for await (const file of productsFiles) {
@@ -29,4 +32,21 @@ export const saveProductsToDB = async () => {
       async (data) => await processTitles(convertProducts(data)),
     );
   }
+
+  await processPriceHistory();
+  await processPriceChanges();
+  await prisma.priceHistory.deleteMany({
+    where: {
+      createdAt: {
+        lte: getLastDaysDate(30),
+      },
+    },
+  });
+  await prisma.priceChanges.deleteMany({
+    where: {
+      createdAt: {
+        lte: getLastDaysDate(30),
+      },
+    },
+  });
 };

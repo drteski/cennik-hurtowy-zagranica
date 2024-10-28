@@ -11,7 +11,8 @@ import useGetUsers from "@/hooks/useGetUsers";
 import { redirect } from "next/navigation";
 
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
-import { PricesChart } from "@/components/charts/PricesChart";
+import { PriceChanges } from "@/components/charts/PriceChanges";
+import { History } from "@/components/tables/History";
 
 const BasePage = () => {
   const session = useSession();
@@ -34,7 +35,7 @@ const BasePage = () => {
   }
   if (session.status === "unauthenticated") return redirect("/login");
   return (
-    <main className="h-screen bg-neutral-100 grid grid-rows-[36px_1fr_36px] min-w-[768px] p-10">
+    <main className="h-screen grid grid-rows-[36px_1fr_36px] min-w-[768px] p-10">
       <NavigationBar
         user={user}
         loadingState={isLoading}
@@ -43,28 +44,28 @@ const BasePage = () => {
         showLogout
       />
 
-      <div className="grid py-10 grid-cols-[300px_1fr] gap-4">
-        <div className="flex flex-col gap-4 rounded-xl bg-neutral-200 p-4">
+      <div className="grid py-10 grid-cols-[400px_1fr] gap-4">
+        <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 p-4">
           <HeaderSmall
             text="Price lists"
-            className="text-left text-2xl font-bold text-center block py-2 px-4 bg-neutral-900 text-white rounded-md"
+            className="text-center text-lg font-normal block py-2 px-4 bg-neutral-100 text-black rounded-md"
           />
           <div className=" flex flex-col gap-4 justify-between h-full">
             <Link
               href="/rea"
-              className="bg-neutral-50 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
             >
               <Logo alias="Rea" />
             </Link>
             <Link
               href="/toolight"
-              className="bg-neutral-50 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
             >
               <Logo alias="Toolight" />
             </Link>
             <Link
               href="/tutumi"
-              className="bg-neutral-50 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
             >
               <Logo alias="Tutumi" />
             </Link>
@@ -72,26 +73,19 @@ const BasePage = () => {
         </div>
         <div className="grid grid-rows-[100px_1fr]">
           <div className="grid grid-rows-2 gap-4 h-[calc(100dvh_-_72px_-_160px)]">
-            <div className="p-4 bg-neutral-200 rounded-xl flex flex-col items-end gap-4">
-              <HeaderSmall
-                text="Price history - last 10 days"
-                className="text-left text-sm font-normal block py-2 px-4 bg-neutral-900 text-white rounded-md"
-              />
-            </div>
-            <div className="p-4 bg-neutral-200 rounded-xl flex flex-col items-end gap-4">
-              <HeaderSmall
-                text="Price changes - last 10 days"
-                className="text-left text-sm font-normal block py-2 px-4 bg-neutral-900 text-white rounded-md"
-              />
-              <PricesChart />
-            </div>
+            <History />
+            <PriceChanges />
           </div>
         </div>
       </div>
 
       <div className="flex w-full justify-end items-center">
         {user.role === "admin" ? (
-          <Button size="icon" asChild>
+          <Button
+            size="icon"
+            asChild
+            className="bg-neutral-300 hover:bg-neutral-200 text-black"
+          >
             <Link href="/settings">
               <CarbonSettings className="h-5 w-5" />
             </Link>

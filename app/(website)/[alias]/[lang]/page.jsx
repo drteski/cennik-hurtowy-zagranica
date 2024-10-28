@@ -49,7 +49,7 @@ const LangPage = ({ params }) => {
   if (!isUserAllowed) return redirect(`/${alias}`);
 
   return (
-    <main className="flex flex-col min-w-[768px] bg-neutral-100">
+    <main className="flex flex-col min-w-[768px]">
       <div className="p-10 flex justify-between items-center">
         <NavigationBar
           user={user}
