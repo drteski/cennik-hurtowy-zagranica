@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { endOfDay, startOfDay } from "date-fns";
 import { getLastDaysDate } from "@/lib/processJson";
+import prisma from "db";
 
 export async function GET() {
   const priceHistory = await prisma.priceHistory.findMany({
