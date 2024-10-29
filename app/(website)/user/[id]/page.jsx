@@ -57,7 +57,10 @@ const UserPage = ({ params }) => {
 
   const handleCreateUser = useMutation({
     mutationFn: (e) => handleUser(e),
-    onSuccess: () => queryClient.invalidateQueries(["users", params.id]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", params.id]);
+      queryClient.invalidateQueries(["users"]);
+    },
   });
 
   if (session.status === "loading") {
@@ -137,7 +140,7 @@ const UserPage = ({ params }) => {
               <Checkbox
                 id="sendNotification"
                 onCheckedChange={(value) => setSendNotification(value)}
-                defaultChecked={data.sendNotification}
+                defaultChecked={sendNotification}
               />
               <Label htmlFor="sendNotification">
                 Recive email notifications

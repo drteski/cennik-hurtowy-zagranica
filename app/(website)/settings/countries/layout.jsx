@@ -47,40 +47,41 @@ const SettingsCountriesLayout = ({ children }) => {
       />
       <div className="flex flex-col">
         <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/settings/users">Users</Link>
-          </Button>
-          <Button className="bg-gray-500" asChild>
-            <Link href="/settings/countries">Countries</Link>
-          </Button>
+          <Link
+            className="px-3 py-2 border border-neutral-200 text-neutral-400 rounded-md text-[14px] hover:border-neutral-400 transition"
+            href="/settings/users"
+          >
+            Users
+          </Link>
+          <Link
+            className="px-3 py-2 border border-neutral-500 rounded-md text-[14px] hover:border-neutral-400 transition"
+            href="/settings/countries"
+          >
+            Countries
+          </Link>
         </div>
-        <div className="w-full h-[calc(100dvh_-_116px_-_40px_-_36px)]">
-          <div className="bg-gray-100 grid grid-cols-[300px_1fr] gap-4 rounded-lg mt-2 h-full p-4">
+        <div className="w-full h-[calc(100dvh_-_116px_-_40px_-_44px)]">
+          <div className="grid grid-cols-[300px_1fr] gap-4 mt-2 h-full">
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <div className="grid grid-rows-[auto_1fr_auto] gap-4">
+              <div className="grid grid-rows-[auto_1fr] gap-4 p-4 rounded-xl border border-neutral-200">
                 <Input
                   onChange={handleSearch}
                   placeholder="Search"
                   className="bg-white"
                 />
-                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_14px)]">
+                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_24px)]">
                   {countries.map((country) => {
                     return (
-                      <Button
+                      <Link
                         key={country.id}
-                        asChild
-                        className={`${currentCountry === country.id ? "bg-gray-500" : ""}`}
+                        className={`flex justify-between px-3 py-2 text-[14px] hover:border-neutral-400 transition border border-neutral-200 font-medium rounded-lg  items-center ${currentCountry === country.id ? "border-neutral-500" : ""}`}
+                        href={`/settings/countries/${country.id}`}
                       >
-                        <Link
-                          className="flex justify-between items-center"
-                          href={`/settings/countries/${country.id}`}
-                        >
-                          {country.name}
-                          <ChevronRight className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                        {country.name}
+                        <ChevronRight className="h-4 w-4" />
+                      </Link>
                     );
                   })}
                 </div>

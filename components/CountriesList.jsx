@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export const CountriesList = ({ isLoading, countries, alias }) => {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5 items-start overflow-hidden">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4 items-start overflow-hidden">
       {isLoading ? (
         <>
           {Array.from(Array(26).keys()).map((key) => (
@@ -23,9 +25,19 @@ export const CountriesList = ({ isLoading, countries, alias }) => {
                 <Link
                   key={country.iso}
                   href={`/${alias.toLowerCase()}/${country.iso}`}
-                  className="font-medium text-normal text-center uppercase bg-neutral-900 text-white rounded-xl p-8 transition hover:bg-neutral-700"
+                  className="font-semibold text-xl flex items-end uppercase border border-neutral-200 group/country transition hover:border-neutral-400 rounded-xl p-4 h-32 relative"
                 >
-                  {country.name}
+                  <div className="h-full flex flex-col justify-between">
+                    <Image
+                      src={`/static/lang/${country.iso}.png`}
+                      alt={""}
+                      width={36}
+                      height={32}
+                      className="rounded-md border border-neutral-200"
+                    />
+                    {country.name}
+                  </div>
+                  <ChevronRight className="absolute bottom-4 right-4 transition opacity-0 group-hover/country:opacity-100 -translate-x-2 group-hover/country:translate-x-2" />
                 </Link>
               ))}
             </>

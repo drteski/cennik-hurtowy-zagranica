@@ -20,7 +20,7 @@ const BasePage = () => {
 
   const user = useMemo(() => {
     if (!isLoading) {
-      if (session.data !== undefined)
+      if (session.data.user !== undefined)
         return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
@@ -53,19 +53,19 @@ const BasePage = () => {
           <div className=" flex flex-col gap-4 justify-between h-full">
             <Link
               href="/rea"
-              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:border-neutral-400"
             >
               <Logo alias="Rea" />
             </Link>
             <Link
               href="/toolight"
-              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:border-neutral-400"
             >
               <Logo alias="Toolight" />
             </Link>
             <Link
               href="/tutumi"
-              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:bg-neutral-100"
+              className="border border-neutral-200 flex items-center justify-center p-16 h-full rounded-lg transition hover:border-neutral-400"
             >
               <Logo alias="Tutumi" />
             </Link>

@@ -63,7 +63,7 @@ export const UsersNew = () => {
   });
 
   return (
-    <div className="relative">
+    <div className="relative  border border-neutral-200 rounded-xl p-4">
       <HeaderSmall className="text-left pl-2 pr-4" text={name} />
       {tooltip !== "" && (
         <span className="absolute top-0 right-4 text-sm text-gray-500 py-2 block">

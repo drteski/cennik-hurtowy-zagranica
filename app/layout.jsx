@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Providers } from "@/components/Layout/Providers";
 
 const inter = Inter({
-  weight: ["300", "400", "700", "900"],
+  weight: ["300", "400", "500", "600", "700", "900"],
   subsets: ["latin-ext"],
 });
 

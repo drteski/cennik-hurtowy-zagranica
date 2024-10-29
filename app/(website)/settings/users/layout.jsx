@@ -46,50 +46,46 @@ const SettingsUsersLayout = ({ children }) => {
       />
       <div className="flex flex-col">
         <div className="flex gap-2">
-          <Button className="bg-gray-500" asChild>
-            <Link href="/settings/users">Users</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/settings/countries">Countries</Link>
-          </Button>
+          <Link
+            className="px-3 py-2 border rounded-md text-[14px] hover:border-neutral-400 transition border-neutral-500"
+            href="/settings/users"
+          >
+            Users
+          </Link>
+          <Link
+            className="px-3 py-2 border border-neutral-200 text-neutral-400 rounded-md text-[14px] hover:border-neutral-400 transition"
+            href="/settings/countries"
+          >
+            Countries
+          </Link>
         </div>
-        <div className="w-full h-[calc(100dvh_-_116px_-_40px_-_36px)]">
-          <div className="bg-gray-100 grid grid-cols-[300px_1fr] rounded-lg mt-2 h-full py-4">
+        <div className="w-full h-[calc(100dvh_-_116px_-_40px_-_44px)]">
+          <div className="grid grid-cols-[300px_1fr] mt-2 h-full gap-4">
             {isLoading ? (
               <Skeleton className="h-full w-full" />
             ) : (
-              <div className="grid grid-rows-[auto_1fr_auto] gap-4 pl-4 pr-2">
+              <div className="grid grid-rows-[auto_1fr_auto] gap-4 p-4 rounded-xl border border-neutral-200">
                 <Input
                   onChange={handleSearch}
                   placeholder="Search"
                   className="bg-white"
                 />
-                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_32px_-_36px)]">
+                <div className="flex flex-col gap-2 overflow-y-auto h-[calc(100dvh_-_116px_-_80px_-_36px_-_32px_-_40px_-_36px)]">
                   {users.map((user) => {
                     return (
-                      <Button
+                      <Link
                         key={user.id}
-                        asChild
-                        className={`${currentUser === user.id ? "bg-gray-500" : ""}`}
+                        className={`flex px-3 py-2 border border-neutral-200 font-medium rounded-lg justify-between transition hover:border-neutral-400 ${currentUser === user.id ? "border-neutral-500" : ""}`}
+                        href={`/settings/users/${user.id}`}
                       >
-                        <Link
-                          className="flex justify-between items-center"
-                          href={`/settings/users/${user.id}`}
-                        >
-                          {user.role === "admin" ? (
-                            <span className="flex items-center gap-1">
-                              {user.name}
-                              <span className="text-[9px] flex items-center uppercase opacity-50">
-                                ({user.role})
-                              </span>
-                            </span>
-                          ) : (
-                            <>{user.name}</>
-                          )}
-
-                          <ChevronRight className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                        <span className="flex flex-col gap-2">
+                          {user.name}
+                          <span className="text-[10px] flex items-center uppercase text-neutral-400 font-normal">
+                            ( {user.role === "user" ? "client" : user.role} )
+                          </span>
+                        </span>
+                        <ChevronRight className="mt-1 h-4 w-4" />
+                      </Link>
                     );
                   })}
                 </div>

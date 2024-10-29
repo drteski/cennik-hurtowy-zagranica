@@ -43,11 +43,11 @@ export const CountriesEdit = ({ id }) => {
   });
 
   return (
-    <div className="relative">
+    <div className="relative border border-neutral-200 rounded-xl p-4">
       {isLoading ? (
         <Skeleton className="w-full h-9" />
       ) : (
-        <HeaderSmall className="text-left" text={data.name} />
+        <HeaderSmall className="text-left font-bold" text={data.name} />
       )}
       {tooltip !== "" && (
         <span className="absolute top-0 right-4 text-sm text-gray-500 py-2 block">
@@ -67,6 +67,7 @@ export const CountriesEdit = ({ id }) => {
               ref={nameRef}
               className="bg-white"
               defaultValue={data.name}
+              disabled
             />
           </div>
         )}

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { UsersProductsEdit } from "@/components/settings/users/UsersProductsEdit";
 import { useRouter } from "next/navigation";
+import LoadingState from "@/app/loading";
 
 export const UsersEdit = ({ id }) => {
   const [tooltip, setTooltip] = useState("");
@@ -102,22 +103,25 @@ export const UsersEdit = ({ id }) => {
   return (
     <>
       {!data ? (
-        <></>
+        <Skeleton className="w-full h-full" />
       ) : (
-        <div className="relative overflow-hidden ">
+        <div className="relative overflow-hidden border border-neutral-200 rounded-xl p-4">
           {isLoading ? (
             <Skeleton className="w-1/2 h-9" />
           ) : (
-            <HeaderSmall className="text-left pl-2 pr-4" text={data.name} />
+            <HeaderSmall
+              className="text-left pr-4 font-bold"
+              text={data.name}
+            />
           )}
           {tooltip !== "" ? (
-            <span className="absolute top-0 right-4 text-sm text-gray-500 py-2 block">
+            <span className="absolute top-4 right-4 text-sm text-gray-500 py-2 block">
               {tooltip}
             </span>
           ) : (
             <Button
               onClick={handleUsersDelete.mutate}
-              className="absolute top-0 right-4"
+              className="absolute top-4 right-4"
               variant="destructive"
               size="sm"
             >
@@ -125,10 +129,10 @@ export const UsersEdit = ({ id }) => {
             </Button>
           )}
           <form
-            className="grid grid-rows-[1fr_auto] h-[calc(100dvh_-_80px_-_72px_-_40px_-_70px)] pt-10"
+            className="grid grid-rows-[1fr_auto] h-[calc(100dvh_-_80px_-_72px_-_44px_-_70px)] pt-10"
             onSubmit={(e) => handleUsersEdit.mutate(e)}
           >
-            <div className="overflow-y-scroll pl-2 pr-4">
+            <div className="overflow-y-scroll pr-0.5">
               <div className="flex flex-col gap-4">
                 {isLoading ? (
                   <Skeleton className="w-full h-[16px]" />
@@ -299,9 +303,9 @@ export const UsersEdit = ({ id }) => {
               )}
             </div>
             {isLoading ? (
-              <Skeleton className="w-full h-9 ml-2 mr-4" />
+              <Skeleton className="w-full h-9" />
             ) : (
-              <Button className="self-end mt-4 ml-2 mr-4">Save</Button>
+              <Button className="self-end mt-4">Save</Button>
             )}
           </form>
         </div>

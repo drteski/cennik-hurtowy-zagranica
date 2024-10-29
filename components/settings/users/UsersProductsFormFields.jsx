@@ -19,7 +19,7 @@ export const UsersProductsFormFields = ({
           <div className="flex flex-col pt-4 justify-between">
             <div>
               <HeaderSmall
-                className="text-left p-0 text-2xl"
+                className="text-left p-0 text-2xl font-bold"
                 text={country.name}
               />
             </div>

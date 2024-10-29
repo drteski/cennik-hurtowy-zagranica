@@ -17,7 +17,7 @@ const LangPage = ({ params }) => {
   const user = useMemo(() => {
     if (!isLoading) {
       if (session.status === "authenticated")
-        if (session.data !== undefined)
+        if (session.data.user !== undefined)
           return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }

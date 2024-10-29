@@ -19,7 +19,7 @@ const AliasPage = ({ params }) => {
   const { data, isLoading } = useGetUsers();
   const user = useMemo(() => {
     if (!isLoading) {
-      if (session.data !== undefined)
+      if (session.data.user !== undefined)
         return data.filter((user) => user.id === session.data.user.id)[0];
       return {};
     }
@@ -48,7 +48,7 @@ const AliasPage = ({ params }) => {
           alias={`${alias[0].toUpperCase()}${alias.slice(1, alias.length)}`}
         />
       </div>
-      <div className="p-10 overflow-y-scroll h-[calc(100dvh_-_300px_-_120px_-_36px_-_36px)] border border-gray-200 rounded-xl">
+      <div className="overflow-y-scroll h-[calc(100dvh_-_300px_-_120px_-_36px_-_36px)] ">
         <CountriesList
           isLoading={isLoading}
           countries={user.country}
