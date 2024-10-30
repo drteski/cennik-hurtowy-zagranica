@@ -88,7 +88,7 @@ export const processProducts = async (data) => {
     resolve();
   });
 };
-export const processPrices = async (data, roundPrices = false) => {
+export const processPrices = async (data, roundPrices) => {
   return new Promise(async (resolve) => {
     const pricesToSave = [];
     data.forEach((product) => {
@@ -156,7 +156,7 @@ export const processPrices = async (data, roundPrices = false) => {
     resolve();
   });
 };
-export const processTitles = async (data) => {
+export const processTitles = async (data, force) => {
   return new Promise(async (resolve) => {
     const titlesToSave = [];
     data.forEach((product) => {
@@ -164,7 +164,7 @@ export const processTitles = async (data) => {
       titlesToSave.push(
         ...titles.map((title) => ({
           uid,
-          lang: title.lang,
+          lang: title.lang === "uk" ? "ua" : title.lang,
           name: title.value,
         })),
       );
@@ -176,18 +176,34 @@ export const processTitles = async (data) => {
           const { uid, lang, name } = title;
           const existingTitle = await prisma.productName.findFirst({
             where: {
-              lang: title.lang,
+              lang: title.lang === "uk" ? "ua" : title.lang,
               productId: uid,
             },
           });
           if (existingTitle) {
+            if (force) {
+              return prisma.productName.update({
+                where: {
+                  id: existingTitle.id,
+                },
+                data: {
+                  lang: lang === "uk" ? "ua" : lang,
+                  name,
+                  product: {
+                    connect: {
+                      uid,
+                    },
+                  },
+                },
+              });
+            }
             if (existingTitle.name !== name) {
               return prisma.productName.update({
                 where: {
                   id: existingTitle.id,
                 },
                 data: {
-                  lang,
+                  lang: lang === "uk" ? "ua" : lang,
                   name,
                   product: {
                     connect: {
@@ -200,7 +216,7 @@ export const processTitles = async (data) => {
           } else {
             return prisma.productName.create({
               data: {
-                lang,
+                lang: lang === "uk" ? "ua" : lang,
                 name,
                 product: {
                   connect: {
@@ -218,7 +234,7 @@ export const processTitles = async (data) => {
   });
 };
 
-export const processPriceHistory = async () => {
+export const processPriceHistory = async (roundPrices, date) => {
   return new Promise(async (resolve) => {
     const countries = await prisma.country.findMany();
     if (countries.length !== 0) {
@@ -251,8 +267,8 @@ export const processPriceHistory = async () => {
                           id: country.id,
                         },
                       },
-                      oldPrice,
-                      newPrice,
+                      oldPrice: roundPrices ? Math.round(oldPrice) : oldPrice,
+                      newPrice: roundPrices ? Math.round(newPrice) : newPrice,
                       product: {
                         connect: {
                           uid: productId,
@@ -264,7 +280,7 @@ export const processPriceHistory = async () => {
                   return Promise.all(
                     existingPriceHistory.map(async (existing) => {
                       const { createdAt } = existing;
-                      if (isToday(createdAt)) {
+                      if (isToday(date ? date : createdAt)) {
                         if (
                           existing.newPrice !== newPrice ||
                           existing.oldPrice !== oldPrice
@@ -274,8 +290,12 @@ export const processPriceHistory = async () => {
                               id: existing.id,
                             },
                             data: {
-                              newPrice,
-                              oldPrice,
+                              oldPrice: roundPrices
+                                ? Math.round(oldPrice)
+                                : oldPrice,
+                              newPrice: roundPrices
+                                ? Math.round(newPrice)
+                                : newPrice,
                             },
                           });
                         }
@@ -287,8 +307,12 @@ export const processPriceHistory = async () => {
                                 id: country.id,
                               },
                             },
-                            oldPrice,
-                            newPrice,
+                            oldPrice: roundPrices
+                              ? Math.round(oldPrice)
+                              : oldPrice,
+                            newPrice: roundPrices
+                              ? Math.round(newPrice)
+                              : newPrice,
                             product: {
                               connect: {
                                 uid: productId,
@@ -309,7 +333,7 @@ export const processPriceHistory = async () => {
     resolve();
   });
 };
-export const processPriceChanges = async () => {
+export const processPriceChanges = async (date) => {
   return new Promise(async (resolve) => {
     const countries = await prisma.country.findMany();
     if (countries.length !== 0) {
@@ -345,8 +369,8 @@ export const processPriceChanges = async () => {
               where: {
                 countryId: country.id,
                 createdAt: {
-                  lte: endOfDay(new Date()),
-                  gte: startOfDay(new Date()),
+                  lte: endOfDay(date ? date : new Date()),
+                  gte: startOfDay(date ? date : new Date()),
                 },
               },
             });
@@ -362,11 +386,37 @@ export const processPriceChanges = async () => {
                   },
                 },
               });
+            } else {
+              return prisma.priceChanges.update({
+                where: {
+                  id: existingPriceChanges.id,
+                },
+                data: {
+                  pricesUp: priceChanges.priceUp,
+                  pricesDown: priceChanges.priceDown,
+                  country: {
+                    connect: {
+                      id: country.id,
+                    },
+                  },
+                },
+              });
             }
           })
           .filter(Boolean),
       );
     }
+    resolve();
+  });
+};
+
+export const deleteAllData = async () => {
+  return new Promise(async (resolve) => {
+    await prisma.product.deleteMany();
+    await prisma.productName.deleteMany();
+    await prisma.productPrice.deleteMany();
+    await prisma.priceHistory.deleteMany();
+    await prisma.priceChanges.deleteMany();
     resolve();
   });
 };

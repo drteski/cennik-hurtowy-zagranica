@@ -12,9 +12,9 @@ import {
 import prisma from "@/db";
 
 const dataPath = `${process.cwd().replace(/\\\\/g, "/")}/public/temp/data/`;
-export const saveProductsToDB = async () => {
+export const saveProductsToDB = async (date, round, force) => {
   await downloadProductsData();
-  const files = fs.readdirSync(dataPath);
+  const files = await (async () => fs.readdirSync(dataPath))();
   const productsFiles = files.filter((file) => file.match(/product-\d*/g));
 
   for await (const file of productsFiles) {
@@ -24,17 +24,17 @@ export const saveProductsToDB = async () => {
   }
   for await (const file of productsFiles) {
     await processFile(file).then(
-      async (data) => await processPrices(convertProducts(data), true),
+      async (data) => await processPrices(convertProducts(data), round),
     );
   }
   for await (const file of productsFiles) {
     await processFile(file).then(
-      async (data) => await processTitles(convertProducts(data)),
+      async (data) => await processTitles(convertProducts(data), force),
     );
   }
 
-  await processPriceHistory();
-  await processPriceChanges();
+  await processPriceHistory(round, date);
+  await processPriceChanges(date);
   await prisma.priceHistory.deleteMany({
     where: {
       createdAt: {

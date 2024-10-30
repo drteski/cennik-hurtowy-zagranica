@@ -64,7 +64,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
     getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
-        pageSize: 25,
+        pageSize: 50,
         pageIndex: 0,
       },
     },
@@ -82,9 +82,9 @@ export const DataTable = ({ products, country, priceChanges }) => {
 
   return (
     <div className="h-full">
-      <div className="h-[calc(100dvh_-_120px_-_68px_-_36px)] overflow-y-auto relative">
-        <Table className="overflow-clip rounded-lg">
-          <TableHeader className="sticky top-0 bg-gray-100 z-10">
+      <div className="h-[calc(100dvh_-_120px_-_68px_-_36px)] overflow-y-auto relative rounded-t-xl border-t border-l border-r border-neutral-200">
+        <Table className="overflow-clip">
+          <TableHeader className="bg-white after:border-b after:left-0 after:right-0 after:top-[85px] after:absolute after:h-[1px] sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => {
@@ -136,7 +136,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
           </TableBody>
         </Table>
       </div>
-      <div className="bg-gray-100 sticky bottom-0 p-2 rounded-b-md flex items-center justify-between">
+      <div className="sticky bottom-0 p-2 rounded-b-xl border border-neutral-200 flex items-center justify-between">
         <div className="text-sm">
           Total products <strong>{table.getRowCount()}</strong> — Products with
           increased prices: <strong>{priceChanges.priceUp}</strong> — Products
@@ -183,7 +183,7 @@ export const DataTable = ({ products, country, priceChanges }) => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {[25, 50, 100, 200].map((pageSize) => (
+              {[50, 100, 200].map((pageSize) => (
                 <SelectItem value={pageSize} key={pageSize}>
                   Pokaż {pageSize}
                 </SelectItem>

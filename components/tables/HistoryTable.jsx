@@ -13,6 +13,7 @@ import {
   CarbonTriangleSolid,
 } from "@/components/Layout/Icones";
 import { useEffect, useState } from "react";
+import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 
 export const HistoryTable = ({ data, country }) => {
   const [countryData, setCountryData] = useState([]);
@@ -33,6 +34,14 @@ export const HistoryTable = ({ data, country }) => {
         }),
     );
   }, [data, country]);
+
+  if (countryData.length === 0)
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <HeaderSmall className="font-bold text-neutral-400" text="No history" />
+      </div>
+    );
+
   return (
     <div className="relative overflow-y-auto w-full h-full">
       <Table>

@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "TZ='UTC' next dev",
+    "build": "TZ='UTC' next build",
     "postinstall": "npx prisma generate",
-    "start": "next start",
-    "lint": "next lint",
-    "deploy:local": "next build && pm2 startOrRestart ecosystem.config.js --env local",
-    "deploy:dev": "next build && pm2 startOrRestart ecosystem.config.js --env development",
-    "deploy:prod": "next build && pm2 startOrRestart ecosystem.config.js --env production"
+    "start": "TZ='UTC' next start",
+    "lint": "TZ='UTC' next lint",
+    "deploy:local": "TZ='UTC' next build && pm2 startOrRestart ecosystem.config.js --env local",
+    "deploy:dev": "TZ='UTC' next build && pm2 startOrRestart ecosystem.config.js --env development",
+    "deploy:prod": "TZ='UTC' next build && pm2 startOrRestart ecosystem.config.js --env production"
   },
   "dependencies": {
     "@boiseitguru/cookie-cutter": "^0.2.3",

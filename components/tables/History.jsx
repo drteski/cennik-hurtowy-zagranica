@@ -84,8 +84,6 @@ export const History = () => {
       </div>
       {isLoading ? (
         <Skeleton className="h-full w-full" />
-      ) : data.length === 0 ? (
-        <Skeleton className="h-full w-full" />
       ) : (
         <HistoryTable data={data} country={country} />
       )}

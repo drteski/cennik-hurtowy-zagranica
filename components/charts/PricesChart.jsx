@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/chart";
 import { differenceInDays, format } from "date-fns";
 import { useEffect, useState } from "react";
+import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 
 export const PricesChart = ({ data, country }) => {
   const [countryData, setCountryData] = useState([]);

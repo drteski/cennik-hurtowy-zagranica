@@ -8,22 +8,22 @@ import {
 import { getLastDaysDate } from "@/lib/processJson";
 
 export const GET = async () => {
-  await processPriceHistory();
-  await processPriceChanges();
-  await prisma.priceHistory.deleteMany({
-    where: {
-      createdAt: {
-        lte: getLastDaysDate(30),
-      },
-    },
-  });
-  await prisma.priceChanges.deleteMany({
-    where: {
-      createdAt: {
-        lte: getLastDaysDate(30),
-      },
-    },
-  });
+  // await processPriceHistory();
+  // await processPriceChanges();
+  // await prisma.priceHistory.deleteMany({
+  //   where: {
+  //     createdAt: {
+  //       lte: getLastDaysDate(30),
+  //     },
+  //   },
+  // });
+  // await prisma.priceChanges.deleteMany({
+  //   where: {
+  //     createdAt: {
+  //       lte: getLastDaysDate(30),
+  //     },
+  //   },
+  // });
   // const data = config.data;
   // const translations = config.translations;
   // await Promise.all(
