@@ -8,23 +8,17 @@ import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { CountriesList } from "@/components/CountriesList";
 import LoadingState from "@/app/loading";
 import NotFound from "@/app/not-found";
-import { useMemo } from "react";
 import useGetUsers from "@/hooks/useGetUsers";
 import { redirect } from "next/navigation";
+import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const AliasPage = ({ params }) => {
   const { alias } = params;
   const aliases = ["rea", "tutumi", "toolight"];
   const session = useSession();
   const { data, isLoading } = useGetUsers();
-  const user = useMemo(() => {
-    if (!isLoading) {
-      if (session.data.user !== undefined)
-        return data.filter((user) => user.id === session.data.user.id)[0];
-      return {};
-    }
-    return {};
-  }, [data, isLoading, session.status, session.data, session.data?.user.id]);
+  const user = useGetSessionUser(isLoading, data, session);
+
   if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
     return <LoadingState size="md" />;
@@ -34,21 +28,23 @@ const AliasPage = ({ params }) => {
   }
   if (session.status === "unauthenticated") return redirect("/login");
   return (
-    <div className="h-screen grid grid-rows-[36px_auto_1fr_36px] p-10 min-w-[768px]">
+    <div className="h-screen grid grid-rows-[36px_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
         user={user}
         loadingState={isLoading}
         backPath="/"
         showUser
+        showLogo={
+          <div className="w-full relative">
+            <Logo
+              className="h-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              alias={`${alias[0].toUpperCase()}${alias.slice(1, alias.length)}`}
+            />
+          </div>
+        }
         showLogout
       />
-      <div className="p-10 flex h-[300px] items-center justify-center border-neutral-200">
-        <Logo
-          className="w-96"
-          alias={`${alias[0].toUpperCase()}${alias.slice(1, alias.length)}`}
-        />
-      </div>
-      <div className="overflow-y-scroll h-[calc(100dvh_-_300px_-_120px_-_36px_-_36px)] ">
+      <div className="overflow-y-scroll h-[calc(100dvh_-_120px_-_36px_-_36px_-_40px)] my-10">
         <CountriesList
           isLoading={isLoading}
           countries={user.country}

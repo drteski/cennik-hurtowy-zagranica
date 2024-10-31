@@ -68,33 +68,45 @@ export const UsersProductsEdit = ({
             <Skeleton className="w-full h-[140px] mt-4" />
           ) : (
             <div className="flex flex-col gap-4 pt-4">
-              {allCountries.map((country) => {
-                const existingUserProductsIndex = userProducts.findIndex(
-                  (products) => products.country.id === country.id,
-                );
-                const activeCountry = userCountries.some(
-                  (userCountry) => userCountry.id === country.id,
-                );
-                if (existingUserProductsIndex !== -1)
+              {allCountries
+                .map((country) => {
+                  const existingUserProductsIndex = userProducts.findIndex(
+                    (products) => products.country.id === country.id,
+                  );
+                  if (existingUserProductsIndex === -1) {
+                    return { ...country, activeUserCountry: false };
+                  } else {
+                    return { ...country, activeUserCountry: true };
+                  }
+                })
+                .sort((a, b) => b.activeUserCountry - a.activeUserCountry)
+                .map((country) => {
+                  const existingUserProductsIndex = userProducts.findIndex(
+                    (products) => products.country.id === country.id,
+                  );
+                  const activeCountry = userCountries.some(
+                    (userCountry) => userCountry.id === country.id,
+                  );
+                  if (existingUserProductsIndex !== -1)
+                    return (
+                      <UsersProductsFormFields
+                        key={country.id}
+                        country={country}
+                        activeCountry={!activeCountry}
+                        existingUserProducts={existingUserProductsIndex !== -1}
+                        product={userProducts[existingUserProductsIndex]}
+                        handleChange={handleUserProductChange}
+                      />
+                    );
                   return (
                     <UsersProductsFormFields
                       key={country.id}
                       country={country}
-                      activeCountry={!activeCountry}
                       existingUserProducts={existingUserProductsIndex !== -1}
-                      product={userProducts[existingUserProductsIndex]}
                       handleChange={handleUserProductChange}
                     />
                   );
-                return (
-                  <UsersProductsFormFields
-                    key={country.id}
-                    country={country}
-                    existingUserProducts={existingUserProductsIndex !== -1}
-                    handleChange={handleUserProductChange}
-                  />
-                );
-              })}
+                })}
             </div>
           )}
         </>

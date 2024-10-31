@@ -13,19 +13,13 @@ import { redirect } from "next/navigation";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { PriceChanges } from "@/components/charts/PriceChanges";
 import { History } from "@/components/tables/History";
+import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const BasePage = () => {
   const session = useSession();
   const { data, isLoading } = useGetUsers();
 
-  const user = useMemo(() => {
-    if (!isLoading) {
-      if (session.data.user !== undefined)
-        return data.filter((user) => user.id === session.data.user.id)[0];
-      return {};
-    }
-    return {};
-  }, [data, isLoading, session.data?.user.id, session.data, session.status]);
+  const user = useGetSessionUser(isLoading, data, session);
 
   if (session.status === "loading") {
     return <LoadingState size="md" />;

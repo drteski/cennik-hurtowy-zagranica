@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export const CountriesList = ({ isLoading, countries, alias }) => {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4 items-start overflow-hidden">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-4 items-start overflow-hidden">
       {isLoading ? (
         <>
           {Array.from(Array(26).keys()).map((key) => (
@@ -25,13 +25,13 @@ export const CountriesList = ({ isLoading, countries, alias }) => {
                 <Link
                   key={country.iso}
                   href={`/${alias.toLowerCase()}/${country.iso}`}
-                  className="font-semibold text-xl flex items-end uppercase border border-neutral-200 group/country transition hover:border-neutral-400 rounded-xl p-4 h-32 relative"
+                  className="font-semibold text-xl flex items-end uppercase border border-neutral-200 group/country transition hover:border-neutral-400 rounded-xl p-4 h-48 relative"
                 >
                   <div className="h-full flex flex-col justify-between">
                     <Image
                       src={`/static/lang/${country.iso}.png`}
                       alt={""}
-                      width={36}
+                      width={48}
                       height={32}
                       className="rounded-md border border-neutral-200"
                     />

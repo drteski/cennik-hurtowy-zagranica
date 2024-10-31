@@ -26,7 +26,7 @@ export const UsersProductsFormFields = ({
             <div className="flex flex-col gap-2">
               <div className="flex gap-2 items-center">
                 <Checkbox
-                  id={`onlyWithSku-${product.id}`}
+                  id={`onlyWithSku-${product.country.id}`}
                   onCheckedChange={(value) =>
                     handleChange({
                       name: "onlyWithSku",
@@ -37,13 +37,13 @@ export const UsersProductsFormFields = ({
                   disabled={activeCountry}
                   defaultChecked={product.onlyWithSku}
                 />
-                <Label htmlFor={`onlyWithSku-${product.id}`}>
+                <Label htmlFor={`onlyWithSku-${product.country.id}`}>
                   Only with SKU
                 </Label>
               </div>
               <div className="flex gap-2 items-center">
                 <Checkbox
-                  id={`activeProduct-${product.id}`}
+                  id={`activeProduct-${product.country.id}`}
                   onCheckedChange={(value) =>
                     handleChange({
                       name: "activeProducts",
@@ -54,13 +54,13 @@ export const UsersProductsFormFields = ({
                   disabled={activeCountry}
                   defaultChecked={product.activeProducts}
                 />
-                <Label htmlFor={`activeProduct-${product.id}`}>
+                <Label htmlFor={`activeProduct-${product.country.id}`}>
                   Active Products
                 </Label>
               </div>
               <div className="flex gap-2 items-center">
                 <Checkbox
-                  id={`activeVariant-${product.id}`}
+                  id={`activeVariant-${product.country.id}`}
                   onCheckedChange={(value) =>
                     handleChange({
                       name: "activeVariants",
@@ -71,7 +71,7 @@ export const UsersProductsFormFields = ({
                   disabled={activeCountry}
                   defaultChecked={product.activeVariants}
                 />
-                <Label htmlFor={`activeVariant-${product.id}`}>
+                <Label htmlFor={`activeVariant-${product.country.id}`}>
                   Active Variants
                 </Label>
               </div>
@@ -169,11 +169,11 @@ export const UsersProductsFormFields = ({
   }
   return (
     <div key={country.id}>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 opacity-25">
         <div className="flex flex-col pt-4 justify-between">
           <div>
             <HeaderSmall
-              className="text-left p-0 text-2xl"
+              className="text-left p-0 text-2xl font-bold"
               text={country.name}
             />
           </div>

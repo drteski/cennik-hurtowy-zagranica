@@ -9,6 +9,7 @@ import {
 import { signOut } from "next-auth/react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Logo } from "@/components/Layout/Logos";
 
 export const NavigationBar = ({
   user,
@@ -16,12 +17,13 @@ export const NavigationBar = ({
   backPath,
   showCountry,
   showLogout,
+  showLogo,
   showUser,
   loadingState,
 }) => {
   return (
     <div
-      className={`w-full gap-4 grid ${backPath !== "" && showCountry && showUser && showLogout ? "grid-cols-[auto_auto_1fr_256px_36px]" : !showCountry && showUser && showLogout && backPath !== "" ? "grid-cols-[auto_auto_1fr_36px]" : "grid-cols-[auto_1fr_36px]"} items-center`}
+      className={`w-full gap-4 grid ${(backPath !== "" && showCountry) || (showLogo && showUser && showLogout) ? "grid-cols-[auto_auto_1fr_256px_36px]" : !showCountry && !showLogo && showUser && showLogout && backPath !== "" ? "grid-cols-[auto_auto_1fr_36px]" : "grid-cols-[auto_1fr_36px]"} items-center`}
     >
       <Link className="relative w-[190px]" href="/">
         <PodlasiakLogo className="fill-podlasiak h-14 absolute -top-7 left-0" />
@@ -43,6 +45,7 @@ export const NavigationBar = ({
           className="font-bold text-neutral-600"
         />
       )}
+      {showLogo}
       {showUser && (
         <>
           {loadingState ? (

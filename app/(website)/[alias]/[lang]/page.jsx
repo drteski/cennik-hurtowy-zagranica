@@ -7,21 +7,14 @@ import { NavigationBar } from "@/components/Layout/NavigationBar";
 import useGetUsers from "@/hooks/useGetUsers";
 import { useMemo } from "react";
 import useGetCountries from "@/hooks/useGetCountries";
+import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const LangPage = ({ params }) => {
   const { alias, lang } = params;
   const session = useSession();
   const { data, isLoading } = useGetUsers();
   const countries = useGetCountries();
-
-  const user = useMemo(() => {
-    if (!isLoading) {
-      if (session.status === "authenticated")
-        if (session.data.user !== undefined)
-          return data.filter((user) => user.id === session.data.user.id)[0];
-      return {};
-    }
-  }, [data, isLoading, session.status, session.data, session.data?.user.id]);
+  const user = useGetSessionUser(isLoading, data, session);
 
   const currentCountry = useMemo(() => {
     if (!countries.isLoading)

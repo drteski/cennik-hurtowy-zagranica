@@ -24,8 +24,11 @@ export const History = () => {
 
   const user = useMemo(() => {
     if (!users.isLoading) {
-      if (session.data.user !== undefined)
-        return users.data.filter((user) => user.id === session.data.user.id)[0];
+      if (session.data !== undefined)
+        if (session.data.user !== undefined)
+          return users.data.filter(
+            (user) => user.id === session.data.user.id,
+          )[0];
       return {};
     }
     return {};
