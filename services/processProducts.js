@@ -164,7 +164,7 @@ export const processTitles = async (data, force) => {
       titlesToSave.push(
         ...titles.map((title) => ({
           uid,
-          lang: title.lang === "uk" ? "ua" : title.lang,
+          lang: title.lang,
           name: title.value,
         })),
       );
@@ -176,7 +176,7 @@ export const processTitles = async (data, force) => {
           const { uid, lang, name } = title;
           const existingTitle = await prisma.productName.findFirst({
             where: {
-              lang: title.lang === "uk" ? "ua" : title.lang,
+              lang: title.lang,
               productId: uid,
             },
           });
@@ -187,23 +187,7 @@ export const processTitles = async (data, force) => {
                   id: existingTitle.id,
                 },
                 data: {
-                  lang: lang === "uk" ? "ua" : lang,
-                  name,
-                  product: {
-                    connect: {
-                      uid,
-                    },
-                  },
-                },
-              });
-            }
-            if (existingTitle.name !== name) {
-              return prisma.productName.update({
-                where: {
-                  id: existingTitle.id,
-                },
-                data: {
-                  lang: lang === "uk" ? "ua" : lang,
+                  lang,
                   name,
                   product: {
                     connect: {
@@ -216,7 +200,7 @@ export const processTitles = async (data, force) => {
           } else {
             return prisma.productName.create({
               data: {
-                lang: lang === "uk" ? "ua" : lang,
+                lang,
                 name,
                 product: {
                   connect: {

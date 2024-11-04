@@ -46,17 +46,27 @@ export const PricesChart = ({ data, country }) => {
             };
           }),
           ...missingData,
-        ].reverse(),
+        ].sort(
+          (a, b) =>
+            new Date(a.date.split("-").reverse()).getTime() -
+            new Date(b.date.split("-").reverse()).getTime(),
+        ),
       );
     } else {
       setCountryData(
-        currentCountryData.map((item) => {
-          return {
-            date: format(item.createdAt, "dd-MM-yyyy"),
-            "Price Up": item.pricesUp,
-            "Price Down": item.pricesDown,
-          };
-        }),
+        currentCountryData
+          .map((item) => {
+            return {
+              date: format(item.createdAt, "dd-MM-yyyy"),
+              "Price Up": item.pricesUp,
+              "Price Down": item.pricesDown,
+            };
+          })
+          .sort(
+            (a, b) =>
+              new Date(a.date.split("-").reverse()).getTime() -
+              new Date(b.date.split("-").reverse()).getTime(),
+          ),
       );
     }
   }, [data, country]);
