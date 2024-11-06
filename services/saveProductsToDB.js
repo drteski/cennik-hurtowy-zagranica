@@ -13,7 +13,6 @@ import prisma from "@/db";
 
 const dataPath = `${process.cwd().replace(/\\\\/g, "/")}/public/temp/data/`;
 export const saveProductsToDB = async (date, round, force) => {
-  await downloadProductsData();
   const files = await (async () => fs.readdirSync(dataPath))();
   const productsFiles = files.filter((file) => file.match(/product-\d*/g));
 
