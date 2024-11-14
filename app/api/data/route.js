@@ -3,5 +3,5 @@ import { downloadProductsData } from "@/services/downloadProductsData";
 
 export async function GET() {
   await downloadProductsData();
-  return NextResponse.json({ message: "Pominięto" });
+  return NextResponse.json({ message: "Pobrano pliki danych" });
 }

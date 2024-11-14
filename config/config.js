@@ -81,7 +81,7 @@ export const config = {
       iso: "ua",
       password: "Pontony!88<",
       name: "Ukraine",
-      currency: "EUR",
+      currency: "UAH",
       locale: "ua-UA",
     },
     {
@@ -342,7 +342,7 @@ export const config = {
       tariff: 13,
       lang: "ua",
       tax: 20,
-      currency: "EUR",
+      currency: "UAH",
     },
     {
       tariff: 14,

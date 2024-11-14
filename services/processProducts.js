@@ -218,7 +218,7 @@ export const processTitles = async (data, force) => {
   });
 };
 
-export const processPriceHistory = async (roundPrices, date) => {
+export const processPriceHistory = async (roundPrices) => {
   return new Promise(async (resolve) => {
     const countries = await prisma.country.findMany();
     if (countries.length !== 0) {
@@ -235,16 +235,15 @@ export const processPriceHistory = async (roundPrices, date) => {
               .filter((price) => price.oldPrice !== price.newPrice)
               .map(async (price) => {
                 const { productId, newPrice, oldPrice } = price;
-                const existingPriceHistory = await prisma.priceHistory.findMany(
-                  {
+                const existingPriceHistory =
+                  await prisma.priceHistory.findFirst({
                     where: {
                       countryId: country.id,
                       productId: productId,
                     },
-                  },
-                );
-                if (existingPriceHistory.length === 0) {
-                  return prisma.priceHistory.create({
+                  });
+                if (!existingPriceHistory) {
+                  await prisma.priceHistory.create({
                     data: {
                       country: {
                         connect: {
@@ -261,52 +260,19 @@ export const processPriceHistory = async (roundPrices, date) => {
                     },
                   });
                 } else {
-                  return Promise.all(
-                    existingPriceHistory.map(async (existing) => {
-                      const { createdAt } = existing;
-                      if (isToday(date ? date : createdAt)) {
-                        if (
-                          existing.newPrice !== newPrice ||
-                          existing.oldPrice !== oldPrice
-                        ) {
-                          return prisma.priceHistory.update({
-                            where: {
-                              id: existing.id,
-                            },
-                            data: {
-                              oldPrice: roundPrices
-                                ? Math.round(oldPrice)
-                                : oldPrice,
-                              newPrice: roundPrices
-                                ? Math.round(newPrice)
-                                : newPrice,
-                            },
-                          });
-                        }
-                      } else {
-                        return prisma.priceHistory.create({
-                          data: {
-                            country: {
-                              connect: {
-                                id: country.id,
-                              },
-                            },
-                            oldPrice: roundPrices
-                              ? Math.round(oldPrice)
-                              : oldPrice,
-                            newPrice: roundPrices
-                              ? Math.round(newPrice)
-                              : newPrice,
-                            product: {
-                              connect: {
-                                uid: productId,
-                              },
-                            },
-                          },
-                        });
-                      }
-                    }),
-                  );
+                  const { createdAt } = existingPriceHistory;
+                  if (!isToday(createdAt)) {
+                    await prisma.priceHistory.update({
+                      where: {
+                        id: existingPriceHistory.id,
+                      },
+                      data: {
+                        oldPrice: roundPrices ? Math.round(oldPrice) : oldPrice,
+                        newPrice: roundPrices ? Math.round(newPrice) : newPrice,
+                        createdAt: new Date(Date.now()),
+                      },
+                    });
+                  }
                 }
               })
               .filter(Boolean),
