@@ -8,8 +8,8 @@ import {
 import { getLastDaysDate } from "@/lib/processJson";
 
 export const GET = async () => {
-  await processPriceHistory(true);
-  await processPriceChanges();
+  // await processPriceHistory(true);
+  // await processPriceChanges();
   // await prisma.priceHistory.deleteMany({});
   // await prisma.priceChanges.deleteMany({});
   // await processPriceChanges();
