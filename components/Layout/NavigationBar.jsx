@@ -48,18 +48,18 @@ export const NavigationBar = ({
       {showLogo}
       {showUser && (
         <>
-          {loadingState ? (
-            <Skeleton className="justify-self-end h-9 w-64" />
-          ) : (
-            <Button
-              className="justify-self-end bg-neutral-900 hover:bg-neutral-800"
-              asChild
-            >
-              <Link className="uppercase" href={`/user/${user?.id}`}>
-                {user?.name}
-              </Link>
-            </Button>
-          )}
+          {/*{loadingState ? (*/}
+          {/*  <Skeleton className="justify-self-end h-9 w-64" />*/}
+          {/*) : (*/}
+          <Button
+            className="justify-self-end bg-neutral-900 hover:bg-neutral-800"
+            asChild
+          >
+            <Link className="uppercase" href={`/user/${user?.id}`}>
+              {user?.name}
+            </Link>
+          </Button>
+          {/*)}*/}
         </>
       )}
       {showLogout && (

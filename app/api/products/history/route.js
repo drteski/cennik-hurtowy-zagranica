@@ -13,11 +13,7 @@ export async function GET() {
     },
     include: {
       country: true,
-      product: {
-        include: {
-          names: true,
-        },
-      },
+      product: true,
     },
   });
 

@@ -16,8 +16,8 @@ const AliasPage = ({ params }) => {
   const { alias } = params;
   const aliases = ["rea", "tutumi", "toolight"];
   const session = useSession();
-  const { data, isLoading } = useGetUsers();
-  const user = useGetSessionUser(isLoading, data, session);
+  // const { data, isLoading } = useGetUsers();
+  // const user = useGetSessionUser(isLoading, data, session) ;
 
   if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
@@ -30,8 +30,8 @@ const AliasPage = ({ params }) => {
   return (
     <div className="h-screen grid grid-rows-[36px_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
-        user={user}
-        loadingState={isLoading}
+        user={session.data.user}
+        // loadingState={isLoading}
         backPath="/"
         showUser
         showLogo={
@@ -46,13 +46,13 @@ const AliasPage = ({ params }) => {
       />
       <div className="overflow-y-scroll h-[calc(100dvh_-_120px_-_36px_-_36px_-_40px)] my-10">
         <CountriesList
-          isLoading={isLoading}
-          countries={user.country}
+          isLoading={false}
+          countries={session.data.user.country}
           alias={alias}
         />
       </div>
       <div className="flex justify-end items-center">
-        {user.role === "admin" ? (
+        {session.data.user.role === "admin" ? (
           <Button
             size="icon"
             asChild

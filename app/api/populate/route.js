@@ -1,11 +1,4 @@
-import prisma from "@/db";
 import { NextResponse } from "next/server";
-import { config } from "@/config/config";
-import {
-  processPriceChanges,
-  processPriceHistory,
-} from "@/services/processProducts";
-import { getLastDaysDate } from "@/lib/processJson";
 
 export const GET = async () => {
   // await processPriceHistory(true);

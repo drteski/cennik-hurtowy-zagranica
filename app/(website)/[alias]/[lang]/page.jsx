@@ -45,7 +45,7 @@ const LangPage = ({ params }) => {
     <main className="flex flex-col min-w-[768px]">
       <div className="p-10 flex justify-between items-center">
         <NavigationBar
-          user={user}
+          user={session.data.user}
           loadingState={isLoading}
           country={currentCountry}
           backPath={`/${alias}`}
@@ -54,7 +54,11 @@ const LangPage = ({ params }) => {
           showCountry
         />
       </div>
-      <TableContainer country={currentCountry} alias={alias} user={user.id} />
+      <TableContainer
+        country={currentCountry}
+        alias={alias}
+        user={session.data.user.id}
+      />
     </main>
   );
 };

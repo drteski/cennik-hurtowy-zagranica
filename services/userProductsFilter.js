@@ -72,28 +72,6 @@ export const userProductsFilter = async (
         ],
       },
     },
-    include: {
-      names: {
-        where: {
-          lang: userLang,
-        },
-      },
-      prices: {
-        where: {
-          lang: userLang,
-          NOT: {
-            OR: [
-              {
-                newPrice: 0,
-              },
-              {
-                oldPrice: 0,
-              },
-            ],
-          },
-        },
-      },
-    },
   });
   const selectedProducts = products
     .filter((product) => {
@@ -138,16 +116,23 @@ export const userProductsFilter = async (
           },
         };
       }
+      const filterPrices = product.prices.filter(
+        (price) => price.lang === userLang,
+      );
+      const filterNames = product.names.filter(
+        (name) => name.lang === userLang,
+      );
+
       return {
         id: `${id}`,
         variantId: `${variantId}`,
         ean,
         sku,
         brand,
-        name: names[0].name,
+        name: filterNames[0].name,
         price: {
-          ...prices[0],
-          difference: prices[0].oldPrice - prices[0].newPrice,
+          ...filterPrices[0],
+          difference: filterPrices[0].oldPrice - filterPrices[0].newPrice,
         },
       };
     });

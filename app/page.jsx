@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Logo } from "@/components/Layout/Logos";
 import { NavigationBar } from "@/components/Layout/NavigationBar";
@@ -6,20 +7,18 @@ import { useSession } from "next-auth/react";
 import LoadingState from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { CarbonSettings } from "@/components/Layout/Icones";
-import { useMemo } from "react";
 import useGetUsers from "@/hooks/useGetUsers";
 import { redirect } from "next/navigation";
-
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
-import { PriceChanges } from "@/components/charts/PriceChanges";
 import { History } from "@/components/tables/History";
 import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const BasePage = () => {
   const session = useSession();
-  const { data, isLoading } = useGetUsers();
 
-  const user = useGetSessionUser(isLoading, data, session);
+  // const { data, isLoading } = useGetUsers();
+  //
+  // const user = useGetSessionUser(isLoading, data, session);
 
   if (session.status === "loading") {
     return <LoadingState size="md" />;
@@ -28,11 +27,12 @@ const BasePage = () => {
     return <LoadingState size="md" />;
   }
   if (session.status === "unauthenticated") return redirect("/login");
+
   return (
     <main className="h-screen grid grid-rows-[36px_1fr_36px] min-w-[768px] p-10">
       <NavigationBar
-        user={user}
-        loadingState={isLoading}
+        user={session.data.user}
+        // loadingState={isLoading}
         backPath={""}
         showUser
         showLogout
@@ -66,15 +66,14 @@ const BasePage = () => {
           </div>
         </div>
         <div className="grid grid-rows-[100px_1fr]">
-          <div className="grid grid-rows-2 gap-4 h-[calc(100dvh_-_72px_-_160px)]">
+          <div className="grid grid-rows-1 gap-4 h-[calc(100dvh_-_72px_-_160px)]">
             <History />
-            <PriceChanges />
           </div>
         </div>
       </div>
 
       <div className="flex w-full justify-end items-center">
-        {user.role === "admin" ? (
+        {session.data.user.role === "admin" ? (
           <Button
             size="icon"
             asChild
