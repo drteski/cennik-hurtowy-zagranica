@@ -136,7 +136,7 @@ export const userProductsFilter = async (
         },
       };
     });
-
+  console.log(selectedProducts);
   if (onlyDifferences) {
     return selectedProducts.filter((product) => product.price.difference !== 0);
   } else {
