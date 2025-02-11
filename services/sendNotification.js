@@ -19,8 +19,8 @@ const getChangedPrices = (client) => {
 const sendNotification = ({products, client}) => {
     return new Promise(async (resolve) => {
 
-        const html = await render(<EmailTemplate data={...products} locale={client.locale}
-                                                 name={client.name} currency={client.currency}/>)
+        const html = await render(<EmailTemplate data={...products} locale={client.locale} name={client.name}
+                                                 currency={client.currency}/>)
         await sendEmail({
             to: client.email, subject: `${client.subject} ${client.name}`, html: `${html}`
         })
