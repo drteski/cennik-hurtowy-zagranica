@@ -73,7 +73,6 @@ export const userProductsFilter = async (
       },
     },
   });
-  console.log(products);
   const selectedProducts = products
     .filter((product) => {
       if (userAlias === "") return true;
@@ -137,7 +136,6 @@ export const userProductsFilter = async (
         },
       };
     });
-  console.log(selectedProducts);
   if (onlyDifferences) {
     return selectedProducts.filter((product) => product.price.difference !== 0);
   } else {
