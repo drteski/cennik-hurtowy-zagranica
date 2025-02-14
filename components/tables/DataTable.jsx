@@ -40,8 +40,6 @@ export const DataTable = ({ products, country, priceChanges }) => {
   const [productsData, setProductsData] = useState(() => products);
   const [sorting, setSorting] = useState([]);
 
-  console.log(products);
-
   const columns = useTableColumns(country);
 
   useEffect(() => {

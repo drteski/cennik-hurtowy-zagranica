@@ -8,8 +8,6 @@ import {
 } from "@/components/Layout/Icones";
 import { signOut } from "next-auth/react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Logo } from "@/components/Layout/Logos";
 
 export const NavigationBar = ({
   user,
@@ -19,7 +17,6 @@ export const NavigationBar = ({
   showLogout,
   showLogo,
   showUser,
-  loadingState,
 }) => {
   return (
     <div
@@ -48,9 +45,6 @@ export const NavigationBar = ({
       {showLogo}
       {showUser && (
         <>
-          {/*{loadingState ? (*/}
-          {/*  <Skeleton className="justify-self-end h-9 w-64" />*/}
-          {/*) : (*/}
           <Button
             className="justify-self-end bg-neutral-900 hover:bg-neutral-800"
             asChild
@@ -59,7 +53,6 @@ export const NavigationBar = ({
               {user?.name}
             </Link>
           </Button>
-          {/*)}*/}
         </>
       )}
       {showLogout && (

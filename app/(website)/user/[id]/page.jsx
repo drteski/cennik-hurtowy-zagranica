@@ -67,6 +67,7 @@ const UserPage = ({ params }) => {
     return <LoadingState />;
   }
   if (session.status === "unauthenticated") return redirect("/login");
+
   if (params.id !== session.data.user.id.toString()) return redirect("/");
 
   return (

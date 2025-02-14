@@ -8,16 +8,12 @@ import { NavigationBar } from "@/components/Layout/NavigationBar";
 import { CountriesList } from "@/components/CountriesList";
 import LoadingState from "@/app/loading";
 import NotFound from "@/app/not-found";
-import useGetUsers from "@/hooks/useGetUsers";
 import { redirect } from "next/navigation";
-import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const AliasPage = ({ params }) => {
   const { alias } = params;
   const aliases = ["rea", "tutumi", "toolight"];
   const session = useSession();
-  // const { data, isLoading } = useGetUsers();
-  // const user = useGetSessionUser(isLoading, data, session) ;
 
   if (!aliases.some((allAlias) => allAlias === alias)) return NotFound();
   if (session.status === "loading") {
@@ -31,7 +27,6 @@ const AliasPage = ({ params }) => {
     <div className="h-screen grid grid-rows-[36px_1fr_36px] p-10 min-w-[768px]">
       <NavigationBar
         user={session.data.user}
-        // loadingState={isLoading}
         backPath="/"
         showUser
         showLogo={

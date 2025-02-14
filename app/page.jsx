@@ -7,18 +7,12 @@ import { useSession } from "next-auth/react";
 import LoadingState from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { CarbonSettings } from "@/components/Layout/Icones";
-import useGetUsers from "@/hooks/useGetUsers";
 import { redirect } from "next/navigation";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { History } from "@/components/tables/History";
-import { useGetSessionUser } from "@/hooks/useGetSessionUser";
 
 const BasePage = () => {
   const session = useSession();
-
-  // const { data, isLoading } = useGetUsers();
-  //
-  // const user = useGetSessionUser(isLoading, data, session);
 
   if (session.status === "loading") {
     return <LoadingState size="md" />;
@@ -32,7 +26,6 @@ const BasePage = () => {
     <main className="h-screen grid grid-rows-[36px_1fr_36px] min-w-[768px] p-10">
       <NavigationBar
         user={session.data.user}
-        // loadingState={isLoading}
         backPath={""}
         showUser
         showLogout

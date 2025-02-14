@@ -2,8 +2,7 @@
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { useSession } from "next-auth/react";
 import useGetPriceHistory from "@/hooks/useGetPriceHistory";
-import { useEffect, useMemo, useState } from "react";
-import useGetUsers from "@/hooks/useGetUsers";
+import { useEffect, useState } from "react";
 import LoadingState from "@/app/loading";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -15,37 +14,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HistoryTable } from "@/components/tables/HistoryTable";
+import { redirect } from "next/navigation";
 
 export const History = () => {
   const session = useSession();
   const { data, isLoading } = useGetPriceHistory();
   const [country, setCountry] = useState("");
-  const users = useGetUsers();
 
-  const user = useMemo(() => {
-    if (!users.isLoading) {
-      if (session.data !== undefined)
-        if (session.data.user !== undefined)
-          return users.data.filter(
-            (user) => user.id === session.data.user.id,
-          )[0];
-      return {};
-    }
-    return {};
-  }, [users.data, users.isLoading, session.data]);
   useEffect(() => {
-    if (!users.isLoading) {
-      if (user) {
-        setCountry(user.country[0].name.toLowerCase());
-      }
-    }
-  }, [users.isLoading, user]);
+    if (session.status !== "loading")
+      if (session.data !== undefined)
+        setCountry(session.data.user.country[0].name.toLowerCase());
+  }, [session]);
+
   if (session.status === "loading") {
     return <LoadingState size="md" />;
   }
   if (session.data === undefined) {
     return <LoadingState size="md" />;
   }
+  if (session.status === "unauthenticated") return redirect("/login");
   return (
     <div className="p-4  border border-neutral-200 rounded-xl flex flex-col items-end gap-4">
       <div className="flex gap-2 items-center w-full justify-between">
@@ -73,7 +61,7 @@ export const History = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {user.country.map((item) => {
+                {session.data.user.country.map((item) => {
                   return (
                     <SelectItem key={item.id} value={item.name.toLowerCase()}>
                       {item.name}
