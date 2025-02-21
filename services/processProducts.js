@@ -106,6 +106,7 @@ export const processPriceHistory = async () => {
             const country = countries.filter(
               (country) => country.iso === price.lang,
             );
+            console.log(country, price.lang);
             const existingPriceHistory = await prisma.priceHistory.findFirst({
               where: {
                 countryId: country[0].id,
