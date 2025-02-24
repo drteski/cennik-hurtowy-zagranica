@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import { UsersProductsEdit } from "@/components/settings/users/UsersProductsEdit";
 import { useRouter } from "next/navigation";
-import LoadingState from "@/app/loading";
 
 export const UsersEdit = ({ id }) => {
   const [tooltip, setTooltip] = useState("");

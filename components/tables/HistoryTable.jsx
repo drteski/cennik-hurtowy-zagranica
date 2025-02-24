@@ -15,9 +15,11 @@ import {
 import { useEffect, useState } from "react";
 import { HeaderSmall } from "@/components/Layout/HeaderSmall";
 import { format } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const HistoryTable = ({ data, country }) => {
   const [countryData, setCountryData] = useState([]);
+  const queryClient = useQueryClient();
   useEffect(() => {
     setCountryData(
       data
@@ -34,6 +36,7 @@ export const HistoryTable = ({ data, country }) => {
           };
         }),
     );
+    return () => queryClient.invalidateQueries(["priceHistory"]);
   }, [data, country]);
 
   if (countryData.length === 0)
